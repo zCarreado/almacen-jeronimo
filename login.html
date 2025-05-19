@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="vh-100 poition-absolute">
+    <!-- navbar incertado con thymeleaf-->
+    <!-- <div th:replace="fragments/navbar :: navbar"></div> -->
+    <div class="navbar" style="margin:0;padding: 0; border: 0;box-shadow: 0 0 60px 50px #0d6efd;">
+        <iframe src="fragments/navbar.html" style="width:100%; border:none; height:60px; margin:0; padding:0; ">
+        </iframe>
+    </div>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card shadow-lg">
+                    <div class="card-body h-25 ">
+                        <h3 class="text-center mb-4">Iniciar Sesión</h3>
+                        <form th:action="@{/login}" method="post">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="username" name="username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="password" required>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 mt-5">Ingresar</button>
+                            </div>
+                        </form>
+                        <div th:if="${param.error}" class="alert alert-danger mt-3 
+                    d-none
+                    " role="alert">
+                            Usuario o contraseña inválidos.
+                        </div>
+                        <div th:if="${param.logout}" class="alert alert-success mt-3
+                    d-none
+                    " role="alert">
+                            Has cerrado sesión exitosamente.
+                        </div>
+                        <div class="col-mb-4 mt-4 d-flex justify-content-center gap-3 ">
+                            <a href="#SolvR" class="text-decoration-none">
+                                <i class="bi bi-c-square text-primary"></i> SolvR
+                            </a>
+                            <a href="#facebook" class="text-decoration-none">
+                                <i class="bi bi-twitter"></i> FB
+                            </a>
+                            <a href="#Instagram" class="text-decoration-none">
+                                <i class="bi bi-facebook"></i> IG
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
