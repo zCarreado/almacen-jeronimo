@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -11,7 +11,7 @@
 
 <body class="d-flex">
 
-    <aside class="d-flex flex-column bg-primary text-white vh-100 p-3">
+    <aside th:fragment="admin-aside" class="d-flex flex-column bg-primary text-white vh-100 p-3">
         <h4 class="text-white"> <a href="" class="text-decoration-none text-white"><i class="bi bi-list"></i> Menú
                 Principal </a></h4>
         <hr>
@@ -19,27 +19,27 @@
 
         <ul class="nav nav-pills flex-column mt-auto">
             <li class="nav-item">
-                <a href="/venta" class="nav-link active text-white">
+                <a th:href="@{/venta}" class="nav-link active text-white">
                     <i class="bi bi-cash"></i> Realizar Venta</a>
             </li>
             <li>
-                <a href="/clientes" class="nav-link text-white">
+                <a th:href="@{/clientes}" class="nav-link text-white">
                     <i class="bi bi-people"></i> Clientes</a>
             </li>
             <li>
-                <a href="/inventario" class="nav-link text-white">
+                <a th:href="@{/inventario}" class="nav-link text-white">
                     <i class="bi bi-list-columns-reverse"></i> Inventario</a>
             </li>
             <li>
-                <a href="/proveedores" class="nav-link text-white">
+                <a th:href="@{/proveedores}" class="nav-link text-white">
                     <i class="bi bi-truck"></i> Proveedores</a>
             </li>
             <li>
-                <a href="/reportes" class="nav-link text-white">
+                <a th:href="@{/reportes}" class="nav-link text-white">
                     <i class="bi bi-graph-up"></i> Reportes</a>
             </li>
             <li>
-                <a href="/usuarios" class="nav-link text-white">
+                <a th:href="@{/usuarios}" class="nav-link text-white">
                     <i class="bi bi-person-workspace"></i> Gestión de Usuarios</a>
             </li>
         </ul>
