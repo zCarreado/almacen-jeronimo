@@ -1,6 +1,7 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,7 +11,8 @@ public class Factura {
     private Long id;
     private String numero;
     private LocalDateTime fecha;
-    private Double total;
+    @Column(name = "total", precision = 10, scale = 2)
+    private BigDecimal total;
     private String estadoPago;
     @ManyToOne
     private Venta venta;
@@ -39,11 +41,11 @@ public class Factura {
         this.fecha = fecha;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 

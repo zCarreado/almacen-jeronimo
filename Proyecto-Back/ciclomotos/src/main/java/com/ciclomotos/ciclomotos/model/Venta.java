@@ -1,19 +1,27 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
 public class Venta {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "venta_seq")
+    @SequenceGenerator(name = "venta_seq", sequenceName = "SEQ_VENTA", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
-    private Double total;
+
+    @Column(name = "total", precision = 10, scale = 2)
+    private BigDecimal total;
+
     @ManyToOne
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-   
     public Long getId() {
         return id;
     }
@@ -30,11 +38,11 @@ public class Venta {
         this.fecha = fecha;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 
@@ -46,7 +54,7 @@ public class Venta {
         this.cliente = cliente;
     }
 
-     @Override
+    @Override
     public String toString() {
         return "Venta{" +
                 "id=" + id +

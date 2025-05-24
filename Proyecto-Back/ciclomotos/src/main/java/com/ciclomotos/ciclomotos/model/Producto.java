@@ -5,6 +5,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Column;
 
 @Entity
 public class Producto {
@@ -13,10 +15,14 @@ public class Producto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
-    private String categoria;
-    private Double precio;
+    @Column(name = "precio", precision = 10, scale = 2)
+    private java.math.BigDecimal precio;
     private Integer cantidad;
     private Integer stockMinimo;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria")
+    private Categoria categoria;
 
     @ManyToOne
     private Proveedor proveedor;
@@ -38,19 +44,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public Double getPrecio() {
+    public java.math.BigDecimal getPrecio() {
         return precio;
     }
 
-    public void setPrecio(Double precio) {
+    public void setPrecio(java.math.BigDecimal precio) {
         this.precio = precio;
     }
 
@@ -70,6 +68,14 @@ public class Producto {
         this.stockMinimo = stockMinimo;
     }
 
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
     public Proveedor getProveedor() {
         return proveedor;
     }
@@ -83,7 +89,7 @@ public class Producto {
         return "Producto{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", categoria='" + categoria + '\'' +
+                ", categoria=" + (categoria != null ? categoria.getId() : null) +
                 ", precio=" + precio +
                 ", cantidad=" + cantidad +
                 ", stockMinimo=" + stockMinimo +

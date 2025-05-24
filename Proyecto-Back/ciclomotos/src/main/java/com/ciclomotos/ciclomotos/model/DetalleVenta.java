@@ -1,11 +1,13 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 public class DetalleVenta {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "detalle_venta_seq")
+    @SequenceGenerator(name = "detalle_venta_seq", sequenceName = "SEQ_DETALLE_VENTA", allocationSize = 1)
     private Long id;
 
     @ManyToOne
@@ -15,8 +17,10 @@ public class DetalleVenta {
     private Producto producto;
 
     private Integer cantidad;
-    private Double precioUnitario;
-    private Double subtotal;
+    @Column(name = "precio_unitario", columnDefinition = "NUMBER(10,2)")
+    private BigDecimal precioUnitario;
+    @Column(name = "subtotal", columnDefinition = "NUMBER(10,2)")
+    private BigDecimal subtotal;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -30,11 +34,11 @@ public class DetalleVenta {
     public Integer getCantidad() { return cantidad; }
     public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 
-    public Double getPrecioUnitario() { return precioUnitario; }
-    public void setPrecioUnitario(Double precioUnitario) { this.precioUnitario = precioUnitario; }
+    public BigDecimal getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
 
-    public Double getSubtotal() { return subtotal; }
-    public void setSubtotal(Double subtotal) { this.subtotal = subtotal; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 
     @Override
     public String toString() {

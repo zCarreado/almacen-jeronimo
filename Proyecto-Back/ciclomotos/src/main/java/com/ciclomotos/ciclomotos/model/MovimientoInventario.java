@@ -10,16 +10,26 @@ public class MovimientoInventario {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimiento_inventario_seq")
+    @SequenceGenerator(name = "movimiento_inventario_seq", sequenceName = "SEQ_MOVIMIENTO_INVENTARIO", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "producto_id")
     private Producto producto;
 
+    @Column(name = "fecha")
     private LocalDateTime fecha;
+
     @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_movimiento", length = 20)
     private TipoMovimiento tipoMovimiento;
+
+    @Column(name = "cantidad")
     private Integer cantidad;
+
+    @Column(name = "observaciones", length = 255)
     private String observaciones;
 
     public Long getId() { 
