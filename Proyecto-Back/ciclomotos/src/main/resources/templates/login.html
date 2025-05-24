@@ -9,13 +9,10 @@
 </head>
 
 <body class="vh-100 poition-absolute">
-    <!-- navbar incertado con thymeleaf-->
-    <!-- <div th:replace="fragments/navbar :: navbar"></div> -->
-    <div class="navbar" style="margin:0;padding: 0; border: 0;box-shadow: 0 0 60px 50px #0d6efd;">
-        <iframe src="fragments/navbar.html" style="width:100%; border:none; height:60px; margin:0; padding:0; ">
-        </iframe>
-    </div>
-    <div class="container mt-5">
+<!-- Navbar superior -->
+<header th:insert="~{fragments/navbar::navbar}"></header>
+
+ <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="card shadow-lg">

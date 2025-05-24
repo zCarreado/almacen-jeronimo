@@ -10,15 +10,16 @@
 
   </head>
   <body>
-  
-    <!-- Navbar superior -->
-    <div th:replace="fragments :: navbar"></div>
-  
-    <!-- Contenedor con aside + contenido -->
-    <div class="iframe-container">
-      <!-- Aside a la izquierda -->
-        <div th:replace="fragments :: aside-admin"></div>
 
+  <header th:insert="~{fragments/navbar::navbar}"></header>
+
+  <!-- Contenedor con aside + contenido -->
+  <div class="container-fluid m-0 p-0">
+      <!-- alineador de asside y main-->
+      <div class="row">
+          <!-- Aside a la izquierda -->
+          <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
+          <main class="row g-0 col-9"> <!-- fila sin espacios -->
         <div class="container">
             <div class="header d-flex align-items-center">
                 <i class="bi bi-graph-up-arrow me-3 icono-reportes" style="font-size: 8em;"></i>
@@ -72,5 +73,9 @@
 
             </div>
         </div>
+        </div>
+          </main>
+      </div>
+  </div>
     </body>
 </html>
