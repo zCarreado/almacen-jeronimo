@@ -6,6 +6,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
 </head>
 
 <body class="vh-100 poition-absolute">
@@ -28,7 +29,7 @@
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary rounded-pill px-5 mt-5">Ingresar</button>
+                                <button type="submit" class="btn btn-primary rounded-pill px-5 mt-5 border-0">Ingresar</button>
                             </div>
                         </form>
                         <div th:if="${param.error}" class="alert alert-danger mt-3 

@@ -1,0 +1,20 @@
+  .link-subrayado {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 4px;
+  }
+
+  .link-subrayado::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background-color: #000;
+    transition: width 0.3s ease;
+  }
+
+  .link-subrayado:hover::after {
+    width: 100%;
+  }
