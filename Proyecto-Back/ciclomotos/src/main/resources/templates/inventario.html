@@ -16,15 +16,15 @@
   <header th:insert="~{fragments/navbar::navbar}"></header>
 
   <!-- Contenedor con aside + contenido -->
-  <div class="container-fluid m-0 p-0">
+  <div class="container-fluid m-0 p-0 g-0">
 
       <!-- alineador de asside y main-->
-      <div class="row">
+      <div class="row g-0">
           <!-- Aside izquierdo -->
           <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
 
           <!-- Contenido principal -->
-          <main class="col-9 p-4">
+          <main class="col-10 p-4">
             <h2 class="mb-4">Módulo de Inventario</h2>
 
             <form id="formBuscar" class="row g-3 align-items-end mb-4">

@@ -19,7 +19,7 @@
     <!-- Contenedor con aside + contenido -->
     <div class="container-fluid m-0 p-0">
         <!-- alineador de asside y main-->
-        <div class="row">
+        <div class="row g-0">
       <!-- Aside a la izquierda -->
         <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
         <main class="row g-0 col-9"> <!-- fila sin espacios -->
@@ -28,7 +28,7 @@
                     <h2 class="mb-4">Registro de Cliente</h2>
 
                     <form th:action="@{/crearCliente}" th:object="${cliente}" method="post">
-                    <div class="row mb-3 d-flex flex-column">
+                    <div class="row mb-3 d-flex flex-column g-0">
                         <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="nombre" placeholder="Juan">
