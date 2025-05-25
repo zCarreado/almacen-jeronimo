@@ -26,4 +26,8 @@ public class AsideController {
     public String mostrarUsuiario() {
         return "registro-cliente";
     }
+    @GetMapping("/servicios")
+    public String mostrarServicios() {
+        return "servicios";
+    }
 }
