@@ -13,6 +13,6 @@ public class NavController {
 
     @GetMapping("/registro")
     public String mostrarRegistro() {
-        return "registro-cliente";
+        return "cliente-registro";
     }
 }
