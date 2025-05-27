@@ -4,27 +4,43 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 
 @Entity
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "producto_seq")
+    @SequenceGenerator(name = "producto_seq", sequenceName = "SEQ_PRODUCTO", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "nombre", length = 100)
     private String nombre;
+
     @Column(name = "precio", precision = 10, scale = 2)
     private java.math.BigDecimal precio;
+
+    @Column(name = "cantidad")
     private Integer cantidad;
+
+    @Column(name = "Stock_minimo")
     private Integer stockMinimo;
 
     @ManyToOne
     @JoinColumn(name = "categoria")
+    @JsonIgnoreProperties({"productos"})
     private Categoria categoria;
 
     @ManyToOne
+    @JoinColumn(name = "proveedor_id")
+    @JsonIgnoreProperties({"productos"})
     private Proveedor proveedor;
 
     // Getters y Setters

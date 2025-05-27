@@ -17,7 +17,13 @@ public class ClienteController {
 
     @PostMapping("/crearCliente")
     public Cliente crearCliente(@RequestBody Cliente cliente) {
-        return clienteService.crearCliente(cliente);
+        try {
+            return clienteService.crearCliente(cliente);
+        } catch (Exception e) {
+            System.out.println("ERROR AL CREAR CLIENTE: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/obtenerClientes")

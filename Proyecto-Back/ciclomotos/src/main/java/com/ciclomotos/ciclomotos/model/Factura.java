@@ -5,17 +5,29 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "factura")
 public class Factura {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "factura_seq")
+    @SequenceGenerator(name = "factura_seq", sequenceName = "SEQ_FACTURA", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
-    private String numero;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "venta_id", nullable = false)
+    private Venta venta;
+
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
+
     @Column(name = "total", precision = 10, scale = 2)
     private BigDecimal total;
+
+    @Column(name = "estado_pago")
     private String estadoPago;
-    @ManyToOne
-    private Venta venta;
+
+    @Column(name = "numero")
+    private String numero;
 
     public Long getId() {
         return id;

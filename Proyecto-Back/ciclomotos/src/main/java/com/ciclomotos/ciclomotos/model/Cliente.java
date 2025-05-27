@@ -4,13 +4,20 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "cliente")
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliente_seq")
+    @SequenceGenerator(name = "cliente_seq", sequenceName = "SEQ_CLIENTE", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "nombre")
     private String nombre;
+    @Column(name = "email")
     private String email;
+    @Column(name = "telefono")
     private String telefono;
+    @Column(name = "direccion")
     private String direccion;
 
     @OneToMany(mappedBy = "cliente")
