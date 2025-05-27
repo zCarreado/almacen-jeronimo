@@ -3,6 +3,9 @@ package com.ciclomotos.ciclomotos.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name = "cliente")
 public class Cliente {
@@ -21,6 +24,7 @@ public class Cliente {
     private String direccion;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnoreProperties({"cliente"})
     private List<Venta> ventas;
 
     public Long getId() {

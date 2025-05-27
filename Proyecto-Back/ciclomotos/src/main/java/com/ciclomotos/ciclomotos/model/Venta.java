@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 public class Venta {
     @Id
@@ -20,7 +22,12 @@ public class Venta {
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties({"ventas"})
     private Cliente cliente;
+
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("venta")
+    private java.util.List<DetalleVenta> detalles;
 
     public Long getId() {
         return id;
@@ -52,6 +59,14 @@ public class Venta {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+    }
+
+    public java.util.List<DetalleVenta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(java.util.List<DetalleVenta> detalles) {
+        this.detalles = detalles;
     }
 
     @Override
