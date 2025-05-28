@@ -28,27 +28,22 @@
                 <div class="container">
                     <h2 class="mb-4">Registro de Empleado</h2>
 
-                    <form th:action="@{/crearEmpleado}" th:object="${empleado}" method="post">
+                    <form method="post">
                         <div class="row mb-3 d-flex flex-column g-0">
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="nombre" placeholder="Juan">
                             </div>
                             <div class="col-md-6">
-                                <label for="apellido" class="form-label">Apellido</label>
-                                <input type="text" class="form-control" id="apellido" placeholder="Pérez">
+                                <label for="usuario" class="form-label">Usuario</label>
+                                <input type="text" class="form-control" id="usuario" placeholder="Juan822">
                             </div>
-                            <div class="col-md-6">
-                                <label for="correo" class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="correo" placeholder="correo@ejemplo.com">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="telefono" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="telefono" placeholder="3001234567">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" id="direccion" placeholder="Crra 16b #65-87">
+                            <div>
+                                <label for="tipo" class="form-label">
+                                <select id="tipo" class="form-select">
+                                    <option value="">Seleccione un rol</option>
+                                </select>
+                                </label>
                             </div>
                             <div class="col-md-6">
                                 <label for="contraseña" class="form-label">Contraseña</label>

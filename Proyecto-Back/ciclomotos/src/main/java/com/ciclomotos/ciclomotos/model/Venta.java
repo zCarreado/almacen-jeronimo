@@ -1,19 +1,34 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 public class Venta {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "venta_seq")
+    @SequenceGenerator(name = "venta_seq", sequenceName = "SEQ_VENTA", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
-    private Double total;
+
+    @Column(name = "total", precision = 10, scale = 2)
+    private BigDecimal total;
+
     @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties({"ventas"})
     private Cliente cliente;
 
-   
+    @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
+    @com.fasterxml.jackson.annotation.JsonIgnoreProperties("venta")
+    private java.util.List<DetalleVenta> detalles;
+
     public Long getId() {
         return id;
     }
@@ -30,11 +45,11 @@ public class Venta {
         this.fecha = fecha;
     }
 
-    public Double getTotal() {
+    public BigDecimal getTotal() {
         return total;
     }
 
-    public void setTotal(Double total) {
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 
@@ -46,7 +61,15 @@ public class Venta {
         this.cliente = cliente;
     }
 
-     @Override
+    public java.util.List<DetalleVenta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(java.util.List<DetalleVenta> detalles) {
+        this.detalles = detalles;
+    }
+
+    @Override
     public String toString() {
         return "Venta{" +
                 "id=" + id +

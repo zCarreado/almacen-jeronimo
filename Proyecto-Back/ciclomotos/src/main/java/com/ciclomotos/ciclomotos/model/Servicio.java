@@ -6,15 +6,31 @@ import java.time.LocalDateTime;
 @Entity
 public class Servicio {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "servicio_seq")
+    @SequenceGenerator(name = "servicio_seq", sequenceName = "SEQ_SERVICIO", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "nombre", length = 100)
+    private String nombre;
+    
+    @Column(name = "descripcion", length = 255)
     private String descripcion;
+
+    @Column(name = "fecha_ingreso")
     private LocalDateTime fechaIngreso;
+
+    @Column(name = "fecha_entrega")
     private LocalDateTime fechaEntrega;
+
+    @Column(name = "estado", length = 50)
     private String estado;
-    private Double costo;
+
+    @Column(name = "costo", precision = 10, scale = 2)
+    private java.math.BigDecimal costo;
 
     @ManyToOne
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     public Long getId() {
@@ -57,11 +73,11 @@ public class Servicio {
         this.estado = estado;
     }
 
-    public Double getCosto() {
+    public java.math.BigDecimal getCosto() {
         return costo;
     }
 
-    public void setCosto(Double costo) {
+    public void setCosto(java.math.BigDecimal costo) {
         this.costo = costo;
     }
 

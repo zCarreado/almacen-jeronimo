@@ -3,18 +3,28 @@ package com.ciclomotos.ciclomotos.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@Table(name = "cliente")
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliente_seq")
+    @SequenceGenerator(name = "cliente_seq", sequenceName = "SEQ_CLIENTE", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "nombre")
     private String nombre;
-    private String apellido;
+    @Column(name = "email")
     private String email;
+    @Column(name = "telefono")
     private String telefono;
+    @Column(name = "direccion")
     private String direccion;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnoreProperties({"cliente"})
     private List<Venta> ventas;
 
     public Long getId() {
@@ -31,14 +41,6 @@ public class Cliente {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
     }
 
     public String getEmail() {
@@ -78,7 +80,6 @@ public class Cliente {
         return "Cliente{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", apellido='" + apellido + '\'' +
                 ", email='" + email + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", direccion='" + direccion + '\'' +
