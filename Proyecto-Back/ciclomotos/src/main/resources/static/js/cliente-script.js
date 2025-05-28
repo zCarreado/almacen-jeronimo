@@ -6,11 +6,14 @@ function registrarCliente() {
 
         const cliente = {
             nombre: document.getElementById('nombre').value,
-            apellido: document.getElementById('apellido').value,
             email: document.getElementById('correo').value,
             telefono: document.getElementById('telefono').value,
             direccion: document.getElementById('direccion').value,
-            contraseña: document.getElementById('contraseña').value
+            contraseña: document.getElementById('contraseña').value,
+            //usuario: {
+            //    usuario: document.getElementById('usuario').value,
+            //    contraseña: document.getElementById('contraseña').value
+            //}
         };
 
         fetch('/api/clientes/crearCliente', {
@@ -58,11 +61,9 @@ function actualizarCliente(id) {
 
     const clienteActualizado = {
         nombre: document.getElementById('nombre').value,
-        apellido: document.getElementById('apellido').value,
         email: document.getElementById('correo').value,
         telefono: document.getElementById('telefono').value,
         direccion: document.getElementById('direccion').value,
-        contraseña: document.getElementById('contraseña').value
     };
     fetch(`/api/clientes/actualizarCliente/${id}`, {
         method: 'PUT',
