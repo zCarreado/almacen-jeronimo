@@ -17,21 +17,8 @@ public class Servicio {
     @Column(name = "descripcion", length = 255)
     private String descripcion;
 
-    @Column(name = "fecha_ingreso")
-    private LocalDateTime fechaIngreso;
-
-    @Column(name = "fecha_entrega")
-    private LocalDateTime fechaEntrega;
-
-    @Column(name = "estado", length = 50)
-    private String estado;
-
     @Column(name = "costo", precision = 10, scale = 2)
     private java.math.BigDecimal costo;
-
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
 
     public Long getId() {
         return id;
@@ -49,29 +36,8 @@ public class Servicio {
         this.descripcion = descripcion;
     }
 
-    public LocalDateTime getFechaIngreso() {
-        return fechaIngreso;
-    }
 
-    public void setFechaIngreso(LocalDateTime fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
-    }
 
-    public LocalDateTime getFechaEntrega() {
-        return fechaEntrega;
-    }
-
-    public void setFechaEntrega(LocalDateTime fechaEntrega) {
-        this.fechaEntrega = fechaEntrega;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
 
     public java.math.BigDecimal getCosto() {
         return costo;
@@ -81,24 +47,14 @@ public class Servicio {
         this.costo = costo;
     }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
 
     @Override
     public String toString() {
         return "Servicio{" +
                 "id=" + id +
                 ", descripcion='" + descripcion + '\'' +
-                ", fechaIngreso=" + fechaIngreso +
-                ", fechaEntrega=" + fechaEntrega +
-                ", estado='" + estado + '\'' +
                 ", costo=" + costo +
-                ", cliente=" + (cliente != null ? cliente.getId() : null) +
                 '}';
     }
 }

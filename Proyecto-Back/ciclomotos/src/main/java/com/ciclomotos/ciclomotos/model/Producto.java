@@ -31,7 +31,6 @@ public class Producto {
     @Column(name = "cantidad")
     private Integer cantidad;
 
-    @JsonIgnore
     @Column(name = "Stock_minimo")
     private Integer stockMinimo;
 
