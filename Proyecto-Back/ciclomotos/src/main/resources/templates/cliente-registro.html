@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <script src="js/cliente-script.js" defer></script>
 
 </head>
 <body>
@@ -21,42 +22,45 @@
 
         <main class="vw-100">
             <div class="p-4">
-                <div class="container d-flex justify-content-center">
-                    <h2 class="mb-4">Registro</h2>
+                <div class="container">
+                <h2 class="mb-4 text-center">Registro</h2>
 
-                    <form th:action="@{/crearCliente}" th:object="${cliente}" method="post">
-                        <div class="row mb-3 d-flex flex-column g-0">
-                            <div class="col-md-6">
-                                <label for="nombre" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" placeholder="Juan">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="apellido" class="form-label">Apellido</label>
-                                <input type="text" class="form-control" id="apellido" placeholder="Pérez">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="correo" class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="correo" placeholder="correo@ejemplo.com">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="telefono" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control" id="telefono" placeholder="3001234567">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="direccion" class="form-label">Dirección</label>
-                                <input type="text" class="form-control" id="direccion" placeholder="Crra 16b #65-87">
-                            </div>
-                            <div class="col-md-6">
-                                <label for="contraseña" class="form-label">Contraseña</label>
-                                <input type="password" required
-                                       pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
-                                       title="Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo." class="form-control" id="contraseña" placeholder="apl3L*o">
-                            </div>
-
-                            <button type="submit" class="btn btn-primary col-md-4 mx-auto bg-dark mt-4 border-0">Registrar</button>
+                <div class="d-flex justify-content-center">
+                    <form id="formCliente" class="g-3 col-md-7 p-4">
+                        <div class="col-md-6">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" required placeholder="Juan">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" required placeholder="Pérez">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="correo" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo" required placeholder="correo@ejemplo.com">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="telefono" class="form-label">Teléfono</label>
+                            <input type="tel" class="form-control" id="telefono" required placeholder="3001234567">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" required placeholder="Crra 16b #65-87">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contraseña" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="contraseña" required
+                                   pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
+                                   title="Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."
+                                   placeholder="apl3L*o">
+                        </div>
+                        <div class="col-12 text-center mt-3">
+                            <button type="submit" class="btn btn-dark px-5">Registrar</button>
                         </div>
                     </form>
+
                 </div>
+            </div>
             </div>
         </main>
 </div>

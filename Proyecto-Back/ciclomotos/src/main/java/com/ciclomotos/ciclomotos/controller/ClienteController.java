@@ -10,6 +10,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/clientes")
+@CrossOrigin(origins = "http://localhost:8080") // pon el puerto que uses en frontend
+
 public class ClienteController {
 
     @Autowired

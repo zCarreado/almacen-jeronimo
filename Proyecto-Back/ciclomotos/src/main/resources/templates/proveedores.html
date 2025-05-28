@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <script src="/js/proveedor-script.js" defer></script>
 
 </head>
 <body>
@@ -29,27 +30,28 @@
                 <h2 class="mb-4">Gestión de Proveedores</h2>
 
                 <!-- Formulario para registrar proveedor -->
-                <form th:action="@{/crearProveedor}" th:object="${proveedor}" method="post" class="row g-3 mb-4">
+                <form id="formProveedor" class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" th:field="*{nombre}" class="form-control" id="nombre" placeholder="Proveedor S.A.">
+                        <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Proveedor S.A." required>
                     </div>
                     <div class="col-md-6">
                         <label for="correo" class="form-label">Correo Electrónico</label>
-                        <input type="email" th:field="*{correo}" class="form-control" id="correo" placeholder="proveedor@empresa.com">
+                        <input type="email" name="correo" class="form-control" id="correo" placeholder="proveedor@empresa.com" required>
                     </div>
                     <div class="col-md-6">
                         <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" th:field="*{telefono}" class="form-control" id="telefono" placeholder="3001234567">
+                        <input type="tel" name="telefono" class="form-control" id="telefono" placeholder="3001234567" required>
                     </div>
                     <div class="col-md-6">
                         <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" th:field="*{direccion}" class="form-control" id="direccion" placeholder="Calle 123 #45-67">
+                        <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Calle 123 #45-67" required>
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-dark w-25 border-0">Registrar Proveedor</button>
                     </div>
                 </form>
+
             </div>
             <div class="mb-3 d-flex flex-column g-0 col-md-6 p-4" >
                 <!-- Tabla de proveedores -->

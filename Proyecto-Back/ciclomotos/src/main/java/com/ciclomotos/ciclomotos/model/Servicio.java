@@ -13,6 +13,7 @@ public class Servicio {
     private LocalDateTime fechaEntrega;
     private String estado;
     private Double costo;
+
     @ManyToOne
     private Cliente cliente;
 
