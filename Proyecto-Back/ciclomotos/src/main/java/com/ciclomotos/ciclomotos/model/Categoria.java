@@ -2,13 +2,22 @@ package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
+@Table(name = "CATEGORIA")
 public class Categoria {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_categoria")
+    @SequenceGenerator(name = "seq_categoria", sequenceName = "SEQ_CATEGORIA", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
+
+    @Column(name = "nombre")
     private String nombre;
-    private String descripcion;
+
+    @OneToMany(mappedBy = "categoria")
+    private List<Producto> productos;
 
     public Long getId() {
         return id;
@@ -26,12 +35,12 @@ public class Categoria {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public List<Producto> getProductos() {
+        return productos;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
     }
 
     @Override
@@ -39,7 +48,7 @@ public class Categoria {
         return "Categoria{" +
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
+                ", productos=" + (productos != null ? productos.stream().map(p -> p.getId()).toList() : null) +
                 '}';
     }
 }
