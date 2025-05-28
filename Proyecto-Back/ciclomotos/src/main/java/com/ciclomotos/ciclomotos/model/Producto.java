@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 
@@ -30,6 +31,7 @@ public class Producto {
     @Column(name = "cantidad")
     private Integer cantidad;
 
+    @JsonIgnore
     @Column(name = "Stock_minimo")
     private Integer stockMinimo;
 

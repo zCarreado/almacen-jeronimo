@@ -19,7 +19,7 @@ public class Venta {
 
     @Column(name = "total", precision = 10, scale = 2)
     private BigDecimal total;
-
+    
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     @JsonIgnoreProperties({"ventas"})

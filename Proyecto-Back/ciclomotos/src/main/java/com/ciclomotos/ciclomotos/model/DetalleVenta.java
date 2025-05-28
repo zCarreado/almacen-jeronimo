@@ -1,5 +1,6 @@
 package com.ciclomotos.ciclomotos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
@@ -13,7 +14,9 @@ public class DetalleVenta {
     @ManyToOne
     private Venta venta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "producto_id")
+    @JsonIgnoreProperties({"categoria", "proveedor"})
     private Producto producto;
 
     private Integer cantidad;

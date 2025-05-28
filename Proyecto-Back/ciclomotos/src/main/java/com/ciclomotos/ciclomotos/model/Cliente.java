@@ -10,10 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "cliente")
 public class Cliente {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cliente_seq")
-    @SequenceGenerator(name = "cliente_seq", sequenceName = "SEQ_CLIENTE", allocationSize = 1)
     @Column(name = "id")
-    private Long id;
+    private Long id; // Ahora este campo será la cédula y debe ser asignado manualmente
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "email")

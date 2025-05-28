@@ -22,11 +22,22 @@ public class VentaConDetallesResponse {
     }
 
     public static class DetalleVentaSimple {
+        private Long idProducto;
         private String nombreProducto;
-        private BigDecimal precioUnitario;
+        private java.math.BigDecimal precioUnitario;
         private Integer cantidad;
-        private BigDecimal subtotal;
+        private java.math.BigDecimal subtotal;
+        // No incluir stockMinimo ni ningún campo interno del producto
+
         // getters y setters
+        public Long getIdProducto() {
+            return idProducto;
+        }
+
+        public void setIdProducto(Long idProducto) {
+            this.idProducto = idProducto;
+        }
+
         public String getNombreProducto() { return nombreProducto; }
         public void setNombreProducto(String nombreProducto) { this.nombreProducto = nombreProducto; }
         public BigDecimal getPrecioUnitario() { return precioUnitario; }

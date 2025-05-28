@@ -18,13 +18,14 @@ public class VentaController {
     private VentaService ventaService;
 
     @PostMapping("/crearVenta")
-    public Venta crearVenta(@RequestBody VentaConDetallesRequest request) {
-        return ventaService.crearVenta(request.getVenta(), request.getDetalles());
+    public VentaConDetallesResponse crearVenta(@RequestBody VentaConDetallesRequest request) {
+        Venta ventaCreada = ventaService.crearVenta(request.getVenta(), request.getDetalles());
+        return ventaService.obtenerVentaSimplePorId(ventaCreada.getId());
     }
 
     @GetMapping("/obtenerVentas")
-    public List<Venta> obtenerVentas() {
-        return ventaService.obtenerVentas();
+    public List<VentaConDetallesResponse> obtenerVentas() {
+        return ventaService.obtenerTodasVentasSimples();
     }
 
     @GetMapping("/obtenerVenta/{id}")
@@ -46,14 +47,27 @@ public class VentaController {
     public void eliminarVenta(@PathVariable Long id) {
         ventaService.eliminarVenta(id);
     }
+
 }
 
 // DTO para recibir la venta y sus detalles en una sola petición
 class VentaConDetallesRequest {
     private Venta venta;
     private List<DetalleVenta> detalles;
-    public Venta getVenta() { return venta; }
-    public void setVenta(Venta venta) { this.venta = venta; }
-    public List<DetalleVenta> getDetalles() { return detalles; }
-    public void setDetalles(List<DetalleVenta> detalles) { this.detalles = detalles; }
+
+    public Venta getVenta() {
+        return venta;
+    }
+
+    public void setVenta(Venta venta) {
+        this.venta = venta;
+    }
+
+    public List<DetalleVenta> getDetalles() {
+        return detalles;
+    }
+
+    public void setDetalles(List<DetalleVenta> detalles) {
+        this.detalles = detalles;
+    }
 }
