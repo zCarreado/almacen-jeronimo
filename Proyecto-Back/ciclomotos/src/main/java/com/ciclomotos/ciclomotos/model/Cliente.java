@@ -10,7 +10,7 @@ public class Cliente {
     private Long id;
     private String nombre;
     private String apellido;
-    private String correo;
+    private String email;
     private String telefono;
     private String direccion;
 
@@ -41,12 +41,12 @@ public class Cliente {
         this.apellido = apellido;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCorreo(String email) {
-        this.correo = email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getTelefono() {
@@ -79,7 +79,7 @@ public class Cliente {
                 "id=" + id +
                 ", nombre='" + nombre + '\'' +
                 ", apellido='" + apellido + '\'' +
-                ", email='" + correo + '\'' +
+                ", email='" + email + '\'' +
                 ", telefono='" + telefono + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", ventas=" + ventas +

@@ -4,7 +4,7 @@ document.getElementById('formCliente').addEventListener('submit', function (e) {
     const cliente = {
         nombre: document.getElementById('nombre').value,
         apellido: document.getElementById('apellido').value,
-        correo: document.getElementById('correo').value,
+        email: document.getElementById('correo').value,
         telefono: document.getElementById('telefono').value,
         direccion: document.getElementById('direccion').value,
         contraseña: document.getElementById('contraseña').value

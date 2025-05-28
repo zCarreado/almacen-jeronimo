@@ -3,7 +3,7 @@ document.getElementById('formProveedor').addEventListener('submit', function (e)
 
     const proveedor = {
         nombre: document.getElementById('nombre').value,
-        correo: document.getElementById('correo').value,
+        email: document.getElementById('correo').value,
         telefono: document.getElementById('telefono').value,
         direccion: document.getElementById('direccion').value
     };

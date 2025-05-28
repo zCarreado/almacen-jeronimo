@@ -12,7 +12,7 @@ public class Proveedor {
     private String nombre;
     private String contacto;
     private String telefono;
-    private String correo;
+    private String email;
     private String direccion;
 
     @OneToMany(mappedBy = "proveedor")
@@ -50,12 +50,12 @@ public class Proveedor {
         this.telefono = telefono;
     }
 
-    public String getCorreo() {
-        return correo;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCorreo(String email) {
-        this.correo = email;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getDireccion() {
@@ -81,7 +81,7 @@ public class Proveedor {
                 ", nombre='" + nombre + '\'' +
                 ", contacto='" + contacto + '\'' +
                 ", telefono='" + telefono + '\'' +
-                ", email='" + correo + '\'' +
+                ", email='" + email + '\'' +
                 ", direccion='" + direccion + '\'' +
                 ", productos=" + productos +
                 '}';
