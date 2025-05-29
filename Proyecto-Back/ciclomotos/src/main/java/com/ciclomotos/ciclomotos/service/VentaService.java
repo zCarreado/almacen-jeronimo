@@ -77,6 +77,8 @@ public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
             VentaConDetallesResponse dto = new VentaConDetallesResponse();
             dto.setId(venta.getId());
             dto.setFecha(venta.getFecha());
+            dto.setSubtotal(venta.getSubtotal()); // <-- Asignar subtotal
+            dto.setIva(venta.getIva());           // <-- Asignar iva
             dto.setTotal(venta.getTotal());
 
             VentaConDetallesResponse.ClienteSimple clienteDto = new VentaConDetallesResponse.ClienteSimple();
@@ -139,6 +141,8 @@ public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
         VentaConDetallesResponse dto = new VentaConDetallesResponse();
         dto.setId(venta.getId());
         dto.setFecha(venta.getFecha());
+        dto.setSubtotal(venta.getSubtotal()); // <-- Asignar subtotal
+        dto.setIva(venta.getIva());           // <-- Asignar iva
         dto.setTotal(venta.getTotal());
         VentaConDetallesResponse.ClienteSimple clienteDto = new VentaConDetallesResponse.ClienteSimple();
         clienteDto.setId(venta.getCliente().getId());
@@ -168,21 +172,40 @@ public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
             VentaConDetallesResponse dto = new VentaConDetallesResponse();
             dto.setId(venta.getId());
             dto.setFecha(venta.getFecha());
+            // Si subtotal o iva están en null, los calculamos en tiempo real
+            BigDecimal subtotal = venta.getSubtotal();
+            BigDecimal iva = venta.getIva();
+            if (subtotal == null || iva == null) {
+                subtotal = BigDecimal.ZERO;
+                if (venta.getDetalles() != null) {
+                    for (DetalleVenta d : venta.getDetalles()) {
+                        if (d.getSubtotal() != null) {
+                            subtotal = subtotal.add(d.getSubtotal());
+                        }
+                    }
+                }
+                iva = subtotal.multiply(new BigDecimal("0.19")).setScale(2, java.math.RoundingMode.HALF_UP);
+            }
+            dto.setSubtotal(subtotal);
+            dto.setIva(iva);
             dto.setTotal(venta.getTotal());
 
-            // Cliente simple
             VentaConDetallesResponse.ClienteSimple clienteDto = new VentaConDetallesResponse.ClienteSimple();
             clienteDto.setId(venta.getCliente().getId());
             clienteDto.setNombre(venta.getCliente().getNombre());
             dto.setCliente(clienteDto);
 
-            // Detalles simples
             List<VentaConDetallesResponse.DetalleVentaSimple> detallesDto = new ArrayList<>();
             if (venta.getDetalles() != null) {
                 for (DetalleVenta d : venta.getDetalles()) {
+                    Producto producto = d.getProducto();
+                    if (producto != null && (producto.getNombre() == null || producto.getNombre().isEmpty())) {
+                        producto = productoService.obtenerProductoPorId(producto.getId());
+                        d.setProducto(producto);
+                    }
                     VentaConDetallesResponse.DetalleVentaSimple detDto = new VentaConDetallesResponse.DetalleVentaSimple();
-                    detDto.setIdProducto(d.getProducto().getId());  // Aquí asignamos el id del producto
-                    detDto.setNombreProducto(d.getProducto().getNombre());
+                    detDto.setIdProducto(producto != null ? producto.getId() : null);
+                    detDto.setNombreProducto(producto != null ? producto.getNombre() : null);
                     detDto.setPrecioUnitario(d.getPrecioUnitario());
                     detDto.setCantidad(d.getCantidad());
                     detDto.setSubtotal(d.getSubtotal());
