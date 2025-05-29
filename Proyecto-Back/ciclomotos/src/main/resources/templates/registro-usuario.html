@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <script src="js/usuario-script.js" defer></script>
 
 </head>
 <body>
@@ -23,12 +24,13 @@
     <div class="row g-0">
         <!-- Aside a la izquierda -->
         <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
+
         <main class="row g-0 col-9"> <!-- fila sin espacios -->
             <div class="p-4 col-md-6">
                 <div class="container">
                     <h2 class="mb-4">Registro de Empleado</h2>
 
-                    <form method="post">
+                    <form method="post" id="formUsuario">
                         <div class="row mb-3 d-flex flex-column g-0">
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label">Nombre</label>
@@ -40,7 +42,6 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="tipo" class="form-label"> Tipo</label>
-
                                 <select id="tipo" class="form-select">
                                     <option value="">Seleccione un rol</option>
                                 </select>
