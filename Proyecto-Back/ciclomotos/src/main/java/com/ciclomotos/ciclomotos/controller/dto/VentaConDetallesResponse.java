@@ -7,6 +7,8 @@ import java.util.List;
 public class VentaConDetallesResponse {
     private Long id;
     private LocalDateTime fecha;
+    private BigDecimal subtotal;  // <-- nuevo campo
+    private BigDecimal iva;       // <-- nuevo campo
     private BigDecimal total;
     private ClienteSimple cliente;
     private List<DetalleVentaSimple> detalles;
@@ -14,6 +16,7 @@ public class VentaConDetallesResponse {
     public static class ClienteSimple {
         private Long id;
         private String nombre;
+
         // getters y setters
         public Long getId() { return id; }
         public void setId(Long id) { this.id = id; }
@@ -24,20 +27,13 @@ public class VentaConDetallesResponse {
     public static class DetalleVentaSimple {
         private Long idProducto;
         private String nombreProducto;
-        private java.math.BigDecimal precioUnitario;
+        private BigDecimal precioUnitario;
         private Integer cantidad;
-        private java.math.BigDecimal subtotal;
-        // No incluir stockMinimo ni ningún campo interno del producto
+        private BigDecimal subtotal;
 
         // getters y setters
-        public Long getIdProducto() {
-            return idProducto;
-        }
-
-        public void setIdProducto(Long idProducto) {
-            this.idProducto = idProducto;
-        }
-
+        public Long getIdProducto() { return idProducto; }
+        public void setIdProducto(Long idProducto) { this.idProducto = idProducto; }
         public String getNombreProducto() { return nombreProducto; }
         public void setNombreProducto(String nombreProducto) { this.nombreProducto = nombreProducto; }
         public BigDecimal getPrecioUnitario() { return precioUnitario; }
@@ -48,11 +44,15 @@ public class VentaConDetallesResponse {
         public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
     }
 
-    // getters y setters
+    // getters y setters para la clase principal
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public LocalDateTime getFecha() { return fecha; }
     public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
+    public BigDecimal getSubtotal() { return subtotal; }
+    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+    public BigDecimal getIva() { return iva; }
+    public void setIva(BigDecimal iva) { this.iva = iva; }
     public BigDecimal getTotal() { return total; }
     public void setTotal(BigDecimal total) { this.total = total; }
     public ClienteSimple getCliente() { return cliente; }

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 public class VentaService {
@@ -26,38 +28,45 @@ public class VentaService {
     @Autowired
     private DetalleVentaRepository detalleVentaRepository;
 
-    public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
-        for (DetalleVenta detalle : detalles) {
-            if (detalle.getProducto() != null && detalle.getProducto().getId() != null && detalle.getCantidad() != null) {
-                Producto producto = productoService.obtenerProductoPorId(detalle.getProducto().getId());
-                if (producto == null || producto.getPrecio() == null) {
-                    throw new RuntimeException("No se encontró el producto o el precio es nulo para el producto con id: " + detalle.getProducto().getId());
-                }
-                detalle.setProducto(producto); // Asegura que el producto esté completo (incluye nombre)
-                detalle.setPrecioUnitario(producto.getPrecio());
-                detalle.setSubtotal(producto.getPrecio().multiply(new java.math.BigDecimal(detalle.getCantidad())));
-            } else {
-                throw new RuntimeException("Producto o cantidad no puede ser nulo en el detalle de venta.");
+public Venta crearVenta(Venta venta, List<DetalleVenta> detalles) {
+    for (DetalleVenta detalle : detalles) {
+        if (detalle.getProducto() != null && detalle.getProducto().getId() != null && detalle.getCantidad() != null) {
+            Producto producto = productoService.obtenerProductoPorId(detalle.getProducto().getId());
+            if (producto == null || producto.getPrecio() == null) {
+                throw new RuntimeException("No se encontró el producto o el precio es nulo para el producto con id: " + detalle.getProducto().getId());
             }
+            detalle.setProducto(producto);
+            detalle.setPrecioUnitario(producto.getPrecio());
+            detalle.setSubtotal(producto.getPrecio().multiply(new java.math.BigDecimal(detalle.getCantidad())));
+        } else {
+            throw new RuntimeException("Producto o cantidad no puede ser nulo en el detalle de venta.");
         }
-        java.math.BigDecimal totalVenta = detalles.stream()
-            .map(DetalleVenta::getSubtotal)
-            .reduce(java.math.BigDecimal.ZERO, java.math.BigDecimal::add);
-        venta.setTotal(totalVenta);
-
-        boolean stockOk = productoService.verificarYDescontarStock(detalles);
-        if (!stockOk) {
-            throw new RuntimeException("Stock insuficiente o se viola el stock mínimo para uno o más productos.");
-        }
-
-        Venta ventaGuardada = ventaRepository.save(venta);
-        for (DetalleVenta detalle : detalles) {
-            detalle.setVenta(ventaGuardada);
-            detalleVentaRepository.save(detalle);
-        }
-        // Reload the Venta with all relationships eagerly fetched
-        return ventaRepository.findVentaWithClienteAndDetalles(ventaGuardada.getId());
     }
+    // Ahora sí, todos los subtotales están calculados y no son null
+    BigDecimal subtotalVenta = detalles.stream()
+        .map(DetalleVenta::getSubtotal)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    BigDecimal iva = subtotalVenta.multiply(new BigDecimal("0.19")).setScale(2, RoundingMode.HALF_UP);
+    BigDecimal totalVenta = subtotalVenta.add(iva);
+
+    venta.setSubtotal(subtotalVenta);
+    venta.setIva(iva);
+    venta.setTotal(totalVenta);
+
+    boolean stockOk = productoService.verificarYDescontarStock(detalles);
+    if (!stockOk) {
+        throw new RuntimeException("Stock insuficiente o se viola el stock mínimo para uno o más productos.");
+    }
+
+    Venta ventaGuardada = ventaRepository.save(venta);
+    for (DetalleVenta detalle : detalles) {
+        detalle.setVenta(ventaGuardada);
+        detalleVentaRepository.save(detalle);
+    }
+    return ventaRepository.findVentaWithClienteAndDetalles(ventaGuardada.getId());
+}
+
 
     // Nuevo método para listar ventas con DTO (sin proveedor ni categoria completa)
     public List<VentaConDetallesResponse> obtenerVentasSimples() {
