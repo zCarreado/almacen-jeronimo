@@ -74,6 +74,12 @@ public class ProductoController {
         return productoService.obtenerProductosConStockBajo();
     }
 
+    // Agregar stock a un producto
+    @PutMapping("/agregarStock")
+    public boolean agregarStock(@RequestBody AgregarStockRequest request) {
+        return productoService.agregarStock(request.getProductoId(), request.getCantidad());
+    }
+
     // DTO para compras múltiples
     public static class CompraRequest {
         private Long productoId;
@@ -85,5 +91,14 @@ public class ProductoController {
         public void setCantidad(int cantidad) { this.cantidad = cantidad; }
         public String getObservaciones() { return observaciones; }
         public void setObservaciones(String observaciones) { this.observaciones = observaciones; }
+    }
+
+    public static class AgregarStockRequest {
+        private Long productoId;
+        private int cantidad;
+        public Long getProductoId() { return productoId; }
+        public void setProductoId(Long productoId) { this.productoId = productoId; }
+        public int getCantidad() { return cantidad; }
+        public void setCantidad(int cantidad) { this.cantidad = cantidad; }
     }
 }

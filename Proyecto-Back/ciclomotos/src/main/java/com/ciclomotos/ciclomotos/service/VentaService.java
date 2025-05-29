@@ -33,6 +33,7 @@ public class VentaService {
                 if (producto == null || producto.getPrecio() == null) {
                     throw new RuntimeException("No se encontró el producto o el precio es nulo para el producto con id: " + detalle.getProducto().getId());
                 }
+                detalle.setProducto(producto); // Asegura que el producto esté completo (incluye nombre)
                 detalle.setPrecioUnitario(producto.getPrecio());
                 detalle.setSubtotal(producto.getPrecio().multiply(new java.math.BigDecimal(detalle.getCantidad())));
             } else {
