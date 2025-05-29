@@ -80,6 +80,12 @@ public class ProductoController {
         return productoService.agregarStock(request.getProductoId(), request.getCantidad());
     }
 
+    // Buscar productos por nombre (por path variable)
+    @GetMapping("/buscarPorNombre/{nombre}")
+    public List<Producto> buscarPorNombre(@PathVariable String nombre) {
+        return productoService.buscarPorNombre(nombre);
+    }
+
     // DTO para compras múltiples
     public static class CompraRequest {
         private Long productoId;

@@ -135,4 +135,8 @@ public class ProductoService {
                 .filter(p -> p.getCantidad() != null && p.getStockMinimo() != null && p.getCantidad() <= p.getStockMinimo())
                 .toList();
     }
+
+    public List<Producto> buscarPorNombre(String nombre) {
+        return productoRepository.findByNombreContainingIgnoreCase(nombre);
+    }
 }
