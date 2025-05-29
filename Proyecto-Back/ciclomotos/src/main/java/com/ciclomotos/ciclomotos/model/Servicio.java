@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "servicio")
 public class Servicio {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "servicio_seq")
-    @SequenceGenerator(name = "servicio_seq", sequenceName = "SEQ_SERVICIO", allocationSize = 1)
+    @SequenceGenerator(name = "servicio_seq", sequenceName = "seq_servicio", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

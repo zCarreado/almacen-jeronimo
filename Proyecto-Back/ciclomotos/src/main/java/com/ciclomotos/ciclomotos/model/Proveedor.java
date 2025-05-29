@@ -3,11 +3,14 @@ package com.ciclomotos.ciclomotos.model;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
+@Table(name = "proveedor")
 public class Proveedor {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "proveedor_seq")
-    @SequenceGenerator(name = "proveedor_seq", sequenceName = "SEQ_PROVEEDOR", allocationSize = 1)
+    @SequenceGenerator(name = "proveedor_seq", sequenceName = "seq_proveedor", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
@@ -22,6 +25,7 @@ public class Proveedor {
 
     // Relación opcional con productos
     @OneToMany(mappedBy = "proveedor")
+    @JsonIgnoreProperties({"proveedor"})
     private List<Producto> productos;
 
     // Getters y setters

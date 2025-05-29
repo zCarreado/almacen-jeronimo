@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class Cliente {
     @Id
     @Column(name = "id")
-    private Long id; // Ahora este campo será la cédula y debe ser asignado manualmente
+    private Long id;
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "email")

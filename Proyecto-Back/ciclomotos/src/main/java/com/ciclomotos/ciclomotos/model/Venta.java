@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
+@Table(name = "venta")
 public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "venta_seq")
-    @SequenceGenerator(name = "venta_seq", sequenceName = "SEQ_VENTA", allocationSize = 1)
+    @SequenceGenerator(name = "venta_seq", sequenceName = "seq_venta", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 
