@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class Factura {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "factura_seq")
-    @SequenceGenerator(name = "factura_seq", sequenceName = "SEQ_FACTURA", allocationSize = 1)
+    @SequenceGenerator(name = "factura_seq", sequenceName = "seq_factura", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

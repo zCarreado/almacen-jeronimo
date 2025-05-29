@@ -1,25 +1,32 @@
 package com.ciclomotos.ciclomotos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "detalle_venta")
 public class DetalleVenta {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "detalle_venta_seq")
-    @SequenceGenerator(name = "detalle_venta_seq", sequenceName = "SEQ_DETALLE_VENTA", allocationSize = 1)
+    @SequenceGenerator(name = "detalle_venta_seq", sequenceName = "seq_detalle_venta", allocationSize = 1)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "venta_id")
     private Venta venta;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "producto_id")
+    @JsonIgnoreProperties({"categoria", "proveedor"})
     private Producto producto;
 
+    @Column(name = "cantidad")
     private Integer cantidad;
-    @Column(name = "precio_unitario", columnDefinition = "NUMBER(10,2)")
+    @Column(name = "precio_unitario", precision = 10, scale = 2)
     private BigDecimal precioUnitario;
-    @Column(name = "subtotal", columnDefinition = "NUMBER(10,2)")
+    @Column(name = "subtotal", precision = 10, scale = 2)
     private BigDecimal subtotal;
 
     public Long getId() {

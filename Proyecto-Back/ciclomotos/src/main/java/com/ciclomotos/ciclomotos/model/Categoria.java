@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "CATEGORIA")
+@Table(name = "categoria")
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_categoria")
-    @SequenceGenerator(name = "seq_categoria", sequenceName = "SEQ_CATEGORIA", allocationSize = 1)
+    @SequenceGenerator(name = "seq_categoria", sequenceName = "seq_categoria", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

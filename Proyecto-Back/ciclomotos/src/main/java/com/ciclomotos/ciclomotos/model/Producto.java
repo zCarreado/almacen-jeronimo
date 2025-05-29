@@ -5,14 +5,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 
 @Entity
+@Table(name = "producto")
 public class Producto {
 
     @Id
@@ -21,7 +24,7 @@ public class Producto {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombre", length = 100)
+    @Column(name = "nombre")
     private String nombre;
 
     @Column(name = "precio", precision = 10, scale = 2)
@@ -30,7 +33,7 @@ public class Producto {
     @Column(name = "cantidad")
     private Integer cantidad;
 
-    @Column(name = "Stock_minimo")
+    @Column(name = "stock_minimo")
     private Integer stockMinimo;
 
     @ManyToOne

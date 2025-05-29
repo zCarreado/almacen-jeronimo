@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "movimiento_inventario")
 public class MovimientoInventario {
     public enum TipoMovimiento {
         ENTRADA, SALIDA, AJUSTE, DEVOLUCION
@@ -11,7 +12,7 @@ public class MovimientoInventario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimiento_inventario_seq")
-    @SequenceGenerator(name = "movimiento_inventario_seq", sequenceName = "SEQ_MOVIMIENTO_INVENTARIO", allocationSize = 1)
+    @SequenceGenerator(name = "movimiento_inventario_seq", sequenceName = "seq_movimiento_inventario", allocationSize = 1)
     @Column(name = "id")
     private Long id;
 

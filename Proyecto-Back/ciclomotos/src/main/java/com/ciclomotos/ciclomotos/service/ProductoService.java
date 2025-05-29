@@ -84,6 +84,28 @@ public class ProductoService {
         return true;
     }
 
+    @Transactional
+    public boolean agregarStock(Long productoId, int cantidad) {
+        Producto producto = productoRepository.findById(productoId).orElse(null);
+        if (producto == null || cantidad <= 0) {
+            return false;
+        }
+        if (producto.getCantidad() == null) {
+            producto.setCantidad(0);
+        }
+        producto.setCantidad(producto.getCantidad() + cantidad);
+        productoRepository.save(producto);
+        // Registrar movimiento de inventario
+        MovimientoInventario mov = new MovimientoInventario();
+        mov.setProducto(producto);
+        mov.setFecha(java.time.LocalDateTime.now());
+        mov.setTipoMovimiento(MovimientoInventario.TipoMovimiento.ENTRADA);
+        mov.setCantidad(cantidad);
+        mov.setObservaciones("Stock sumado manualmente");
+        movimientoInventarioRepository.save(mov);
+        return true;
+    }
+
     public Producto crearProducto(Producto producto) {
         return productoRepository.save(producto);
     }
@@ -112,5 +134,9 @@ public class ProductoService {
         return productoRepository.findAll().stream()
                 .filter(p -> p.getCantidad() != null && p.getStockMinimo() != null && p.getCantidad() <= p.getStockMinimo())
                 .toList();
+    }
+
+    public List<Producto> buscarPorNombre(String nombre) {
+        return productoRepository.findByNombreContainingIgnoreCase(nombre);
     }
 }
