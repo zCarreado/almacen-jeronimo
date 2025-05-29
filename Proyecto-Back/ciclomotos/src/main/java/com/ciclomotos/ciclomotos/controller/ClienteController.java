@@ -10,8 +10,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/clientes")
-@CrossOrigin(origins = "http://localhost:8080") // pon el puerto que uses en frontend
-
 public class ClienteController {
 
     @Autowired
@@ -19,7 +17,13 @@ public class ClienteController {
 
     @PostMapping("/crearCliente")
     public Cliente crearCliente(@RequestBody Cliente cliente) {
-        return clienteService.crearCliente(cliente);
+        try {
+            return clienteService.crearCliente(cliente);
+        } catch (Exception e) {
+            System.out.println("ERROR AL CREAR CLIENTE: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/obtenerClientes")

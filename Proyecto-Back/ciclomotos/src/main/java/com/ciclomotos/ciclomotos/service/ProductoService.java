@@ -8,12 +8,16 @@ import com.ciclomotos.ciclomotos.repository.MovimientoInventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class ProductoService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductoService.class);
 
     @Autowired
     private ProductoRepository productoRepository;
@@ -23,17 +27,30 @@ public class ProductoService {
 
     @Transactional
     public boolean verificarYDescontarStock(List<DetalleVenta> detalles) {
+        logger.info("Iniciando verificación y descuento de stock para {} detalles", detalles.size());
         for (DetalleVenta detalle : detalles) {
+            logger.info("Verificando producto con ID {}: cantidad solicitada = {}", detalle.getProducto().getId(), detalle.getCantidad());
             Producto producto = productoRepository.findById(detalle.getProducto().getId()).orElse(null);
-            if (producto == null || producto.getCantidad() < detalle.getCantidad() || (producto.getCantidad() - detalle.getCantidad()) < producto.getStockMinimo()) {
-                return false; // No hay suficiente stock o se viola el stock mínimo
+            if (producto == null) {
+                logger.warn("Producto con ID {} no encontrado", detalle.getProducto().getId());
+                return false;
+            }
+            if (producto.getCantidad() < detalle.getCantidad()) {
+                logger.warn("Stock insuficiente para producto {}. Stock actual: {}, solicitado: {}", producto.getId(), producto.getCantidad(), detalle.getCantidad());
+                return false;
+            }
+            if ((producto.getCantidad() - detalle.getCantidad()) < producto.getStockMinimo()) {
+                logger.warn("Descuento violaría el stock mínimo para producto {}. Stock actual: {}, mínimo: {}, solicitado: {}", producto.getId(), producto.getCantidad(), producto.getStockMinimo(), detalle.getCantidad());
+                return false;
             }
         }
         // Si todos los productos tienen stock suficiente, descontar y registrar movimiento
         for (DetalleVenta detalle : detalles) {
             Producto producto = productoRepository.findById(detalle.getProducto().getId()).orElse(null);
+            int cantidadAnterior = producto.getCantidad();
             producto.setCantidad(producto.getCantidad() - detalle.getCantidad());
             productoRepository.save(producto);
+            logger.info("Descontado {} unidades del producto {}. Stock anterior: {}, nuevo stock: {}", detalle.getCantidad(), producto.getId(), cantidadAnterior, producto.getCantidad());
             // Registrar movimiento de inventario
             MovimientoInventario mov = new MovimientoInventario();
             mov.setProducto(producto);
@@ -42,7 +59,9 @@ public class ProductoService {
             mov.setCantidad(detalle.getCantidad());
             mov.setObservaciones("Venta realizada");
             movimientoInventarioRepository.save(mov);
+            logger.info("Movimiento de inventario registrado para producto {}: {} unidades descontadas", producto.getId(), detalle.getCantidad());
         }
+        logger.info("Verificación y descuento de stock completados exitosamente");
         return true;
     }
 

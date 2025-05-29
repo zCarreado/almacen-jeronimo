@@ -3,6 +3,7 @@ package com.ciclomotos.ciclomotos.controller;
 import com.ciclomotos.ciclomotos.model.Venta;
 import com.ciclomotos.ciclomotos.model.DetalleVenta;
 import com.ciclomotos.ciclomotos.service.VentaService;
+import com.ciclomotos.ciclomotos.controller.dto.VentaConDetallesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,11 @@ public class VentaController {
     @GetMapping("/obtenerVenta/{id}")
     public Optional<Venta> obtenerVentaPorId(@PathVariable Long id) {
         return ventaService.obtenerVentaPorId(id);
+    }
+
+    @GetMapping("/obtenerVentaSimple/{id}")
+    public VentaConDetallesResponse obtenerVentaSimplePorId(@PathVariable Long id) {
+        return ventaService.obtenerVentaSimplePorId(id);
     }
 
     @PutMapping("/actualizarVenta/{id}")
