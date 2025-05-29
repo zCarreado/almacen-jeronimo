@@ -15,13 +15,13 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
-    @PostMapping
+    @PostMapping("/crearUsuario")
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
         Usuario creado = usuarioService.crearUsuario(usuario);
         return ResponseEntity.ok(creado);
     }
 
-    @GetMapping
+    @GetMapping("/obtenerUsuarios")
     public List<Usuario> obtenerUsuarios() {
         return usuarioService.obtenerUsuarios();
     }
