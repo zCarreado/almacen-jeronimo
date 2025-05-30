@@ -8,7 +8,6 @@ function registrarProveedor() {
             nombre: document.getElementById('nombre').value,
             email: document.getElementById('correo').value,
             telefono: document.getElementById('telefono').value,
-            direccion: document.getElementById('direccion').value,
         };
 
         fetch('/api/proveedores/crearProveedor', {
@@ -29,20 +28,32 @@ function registrarProveedor() {
 }
 document.addEventListener('DOMContentLoaded', registrarProveedor);
 
-function obtenerProveedores() {
-    fetch('/api/proveedores')
-        .then(res => res.json())
-        .then(data => {
-            const lista = document.getElementById('listaProveedores');
-            lista.innerHTML = '';
-            data.forEach(p => {
-                const item = document.createElement('li');
-                item.textContent = `${p.nombre} - ${p.correo}`;
-                lista.appendChild(item);
-            });
-        })
-        .catch(err => console.error('Error al cargar proveedores:', err));
+async function obtenerProveedores() {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+
+    try {
+        const response = await fetch('api/proveedores/obtenerProveedores');
+        const proveedores = await response.json();
+
+        proveedores.forEach(proveedor => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+        <td>${proveedor.id}</td>
+        <td>${proveedor.nombre}</td>
+        <td>${proveedor.email}</td>
+        <td>${proveedor.telefono}</td>
+      `;
+            tbody.appendChild(fila);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar cliente:', error);
+    }
 }
+
+document.addEventListener('DOMContentLoaded', obtenerProveedores);
+
 function obtenerProveedorPorId(id) {
     fetch(`/api/proveedores/obtenerProveedor/${id}`)
         .then(res => {

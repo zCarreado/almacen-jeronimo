@@ -48,7 +48,6 @@ async function obtenerClientes() {
         const clientes = await response.json();
 
         clientes.forEach(cliente => {
-            console.log("pollas")
             const fila = document.createElement("tr");
             fila.innerHTML = `
         <td>${cliente.id}</td>

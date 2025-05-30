@@ -43,12 +43,8 @@
                         <label for="telefono" class="form-label">Teléfono</label>
                         <input type="tel" name="telefono" class="form-control" id="telefono" placeholder="3001234567" required>
                     </div>
-                    <div class="col-md-6">
-                        <label for="direccion" class="form-label">Dirección</label>
-                        <input type="text" name="direccion" class="form-control" id="direccion" placeholder="Calle 123 #45-67" required>
-                    </div>
                     <div class="col-12">
-                        <button onclick="registrarProveedor()" class="btn btn-dark w-25 border-0">Registrar Proveedor</button>
+                        <button type="submit" class="btn btn-dark w-25 border-0">Registrar Proveedor</button>
                     </div>
                 </form>
 
@@ -65,17 +61,9 @@
                                 <th>Nombre</th>
                                 <th>Correo</th>
                                 <th>Teléfono</th>
-                                <th>Dirección</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="p : ${proveedores}">
-                                <td th:text="${p.id}">1</td>
-                                <td th:text="${p.nombre}">Proveedor S.A.</td>
-                                <td th:text="${p.correo}">correo@ejemplo.com</td>
-                                <td th:text="${p.telefono}">3001234567</td>
-                                <td th:text="${p.direccion}">Calle 123</td>
-                            </tr>
                             </tbody>
                         </table>
                     </div>
