@@ -25,7 +25,7 @@
         <!-- Aside a la izquierda -->
         <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
 
-        <main class="row g-0 col-9"> <!-- fila sin espacios -->
+        <main class="col-9"> <!-- fila sin espacios -->
             <div class="p-4 col-md-6">
                 <div class="container">
                     <h2 class="mb-4">Registro de Empleado</h2>
@@ -56,6 +56,27 @@
                             <button type="submit" class="btn btn-primary col-md-4 mx-auto bg-dark mt-4 border-0">Registrar</button>
                         </div>
                     </form>
+                </div>
+            </div>
+            <div class="p-4 col-md-6">
+                <div class="container">
+                    <div class="col-md-4">
+                        <div class="container">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Usuario</th>
+                                    <th>Contraseña</th>
+                                    <th>Tipo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

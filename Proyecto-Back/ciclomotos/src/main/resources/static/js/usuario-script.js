@@ -51,7 +51,7 @@ function obtenerTipoUsuarios() {
 document.addEventListener("DOMContentLoaded", obtenerTipoUsuarios());
 
 function obtenerUsuarioPorId(id) {
-    fetch(`/api/usuarios/obtenerUsuario/${id}`)
+    fetch(`/usuarios/obtenerUsuario/${id}`)
         .then(res => {
             if (!res.ok) throw new Error('Usuario no encontrado');
             return res.json();
@@ -61,6 +61,33 @@ function obtenerUsuarioPorId(id) {
         })
         .catch(err => alert(err.message));
 }
+async function obtenerUsuarios() {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+
+    try {
+        const response = await fetch('/usuarios/obtenerUsuarios');
+        const usuarios = await response.json();
+
+        usuarios.forEach(usuario => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+        <td>${usuario.id}</td>
+        <td>${usuario.nombre}</td>
+        <td>${usuario.username}</td>
+        <td>${usuario.password}</td>
+        <td>${usuario.tipo}</td>
+      `;
+            tbody.appendChild(fila);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar usuarios:', error);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', obtenerUsuarios);
+
 function actualizarUsuario(id) {
 
     const usuarioActualizado = {
@@ -75,7 +102,7 @@ function actualizarUsuario(id) {
         body: JSON.stringify(usuarioActualizado)
     })
         .then(res => {
-            if (!res.ok) throw new Error('Error al actualizar usuario');
+            if (!res.ok) throw new Error('Error al actualizar usuarios');
             return res.json();
         })
         .then(data => {

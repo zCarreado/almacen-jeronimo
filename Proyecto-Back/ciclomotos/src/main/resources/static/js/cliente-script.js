@@ -1,3 +1,7 @@
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('id').value = `${Date.now() + Math.floor(Math.random() * 900) - 1748557187000}`;
+});
+
 function registrarCliente() {
     const form = document.getElementById('formCliente');
 
@@ -5,6 +9,7 @@ function registrarCliente() {
         e.preventDefault();
 
         const cliente = {
+            id: document.getElementById('id').value,
             nombre: document.getElementById('nombre').value,
             email: document.getElementById('correo').value,
             telefono: document.getElementById('telefono').value,
@@ -34,18 +39,34 @@ function registrarCliente() {
 }
 document.addEventListener('DOMContentLoaded', registrarCliente);
 
-function obtenerClientes() {
-    fetch('/api/clientes/obtenerClientes')
-        .then(res => {
-            if (!res.ok) throw new Error('Error al obtener clientes');
-            return res.json();
-        })
-        .then(data => {
-            console.log("Clientes:", data);
-            alert("Clientes obtenidos:\n" + JSON.stringify(data, null, 2));
-        })
-        .catch(err => alert(err.message));
+async function obtenerClientes() {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+
+    try {
+        const response = await fetch('api/clientes/obtenerClientes');
+        const clientes = await response.json();
+
+        clientes.forEach(cliente => {
+            console.log("pollas")
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+        <td>${cliente.id}</td>
+        <td>${cliente.nombre}</td>
+        <td>${cliente.email}</td>
+        <td>${cliente.telefono}</td>
+        <td>${cliente.direccion}</td>
+      `;
+            tbody.appendChild(fila);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar cliente:', error);
+    }
 }
+
+document.addEventListener('DOMContentLoaded', obtenerClientes);
+
 function obtenerClientePorId(id) {
     fetch(`/api/clientes/obtenerCliente/${id}`)
         .then(res => {

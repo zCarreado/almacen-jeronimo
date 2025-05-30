@@ -27,6 +27,10 @@
 
                 <div class="d-flex justify-content-center">
                     <form id="formCliente" class="g-3 col-md-7 p-4">
+                        <div class="col-md-6" hidden>
+                            <label for="id" class="form-label">id</label>
+                            <input type="text" class="form-control" id="id">
+                        </div>
                         <div class="col-md-6">
                             <label for="nombre" class="form-label">Nombre</label>
                             <input type="text" class="form-control" id="nombre" required placeholder="Juan">
@@ -44,10 +48,6 @@
                             <input type="tel" class="form-control" id="telefono" required placeholder="3001234567">
                         </div>
                         <div class="col-md-6">
-                            <label for="direccion" class="form-label">Dirección</label>
-                            <input type="text" class="form-control" id="direccion" required placeholder="Crra 16b #65-87">
-                        </div>
-                        <div class="col-md-6">
                             <label for="contraseña" class="form-label">Contraseña</label>
                             <input type="password" class="form-control" id="contraseña" required
                                    pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
@@ -60,7 +60,8 @@
                     </form>
 
                 </div>
-            </div>
+                </div>
+
             </div>
         </main>
 </div>

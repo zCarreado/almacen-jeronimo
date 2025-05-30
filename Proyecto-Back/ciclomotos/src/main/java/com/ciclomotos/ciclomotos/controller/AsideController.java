@@ -11,7 +11,7 @@ public class AsideController {
     }
     @GetMapping("/clientes")
     public String mostrarClientes() {
-        return "registro-cliente";
+        return "cliente";
     }
     @GetMapping("/inventario")
     public String mostrarInventario() {
@@ -24,7 +24,7 @@ public class AsideController {
 
     @GetMapping("/usuarios")
     public String mostrarUsuiario() {
-        return "registro-usuario";
+        return "usuario";
     }
     @GetMapping("/servicios")
     public String mostrarServicios() {

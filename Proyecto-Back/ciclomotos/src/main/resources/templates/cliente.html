@@ -31,6 +31,10 @@
 
                     <div class="d-flex justify-content-center">
                         <form id="formCliente" class="g-3 col-md-7 p-4">
+                            <div class="col-md-6" hidden>
+                                <label for="id" class="form-label">id</label>
+                                <input type="text" class="form-control" id="id">
+                            </div>
                             <div class="col-md-6">
                                 <label for="nombre" class="form-label">Nombre</label>
                                 <input type="text" class="form-control" id="nombre" required placeholder="Juan">
@@ -47,13 +51,6 @@
                                 <label for="direccion" class="form-label">Dirección</label>
                                 <input type="text" class="form-control" id="direccion" required placeholder="Crra 16b #65-87">
                             </div>
-                            <div class="col-md-6">
-                                <label for="contraseña" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="contraseña" required
-                                       pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}"
-                                       title="Debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo."
-                                       placeholder="apl3L*o">
-                            </div>
                             <div class="col-12 text-center mt-3">
                                 <button type="submit" class="btn btn-dark px-5">Registrar</button>
                             </div>
@@ -65,36 +62,21 @@
             <div class="p-4 col-md-6">
                 <div class="container">
                     <div class="col-md-4">
-                        <img src="" alt="Imagen de Clientes">
-                        <div class="container" hidden>
+                        <div class="container">
                           <table class="table table-hover mb-0">
                               <thead class="table-light">
                                   <tr>
                                       <th>ID</th>
                                       <th>Nombre</th>
-                                      <th>Apellodo</th>
                                       <th>Correo</th>
-                                      <th>Teléfono</th>
+                                      <th>Telefono</th>
                                       <th>Dirección</th>
-                                      <th>Ventas</th>
                                   </tr>
                               </thead>
                               <tbody>
-                                  <tr th:each="p : ${productos}">
-                                      <td th:text="${p.id}">id</td>
-                                      <td th:text="${p.nombre}">nombre</td>
-                                      <td th:text="${p.apellido}">apellido</td>
-                                      <td th:text="${p.correo}">correo</td>
-                                      <td th:text="${p.telefono}">télefono</td>
-                                      <td th:text="${p.direccion}">dirección</td>
-                                      <td th:text="${p.ventas}">ventas</td>
-                                  </tr>
                               </tbody>
                           </table>
                         </div>
-                    </div>
-                    <div class="mx-auto mt-4">
-                        <button href="clientes" class="btn btn-primary bg-dark col-md-4 border-0">Ver Clientes</button>
                     </div>
                 </div>
             </div>
