@@ -48,7 +48,7 @@ async function obtenerProveedores() {
         });
 
     } catch (error) {
-        console.error('Error al cargar cliente:', error);
+        console.error('Error al cargar proveedor:', error);
     }
 }
 

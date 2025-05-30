@@ -7,8 +7,8 @@ function registrarProducto() {
         const producto = {
             nombre: document.getElementById('nombre').value,
             categoria: document.getElementById('categoria').value,
-            precio: document.getElementById('telefono').value,
-            cantidad: document.getElementById('direccion').value,
+            precio: document.getElementById('precio').value,
+            cantidad: document.getElementById('cantidad').value,
             stockMinimo: document.getElementById('stock-minimo').value,
         };
 
@@ -29,22 +29,38 @@ function registrarProducto() {
             .catch(err => alert("Error: " + err.message));
     });
 }
-document.addEventListener('DOMContentLoaded', registrarProducto);
+//document.addEventListener('DOMContentLoaded', registrarProducto);
 
-function obtenerProductoes() {
-    fetch('/api/productos/')
-        .then(res => res.json())
-        .then(data => {
-            const lista = document.getElementById('listaProductoes');
-            lista.innerHTML = '';
-            data.forEach(p => {
-                const item = document.createElement('li');
-                item.textContent = `${p.nombre} - ${p.correo}`;
-                lista.appendChild(item);
-            });
-        })
-        .catch(err => console.error('Error al cargar productoes:', err));
+async function obtenerProductos() {
+    const tbody = document.querySelector("table tbody");
+    tbody.innerHTML = "";
+
+    try {
+        const response = await fetch('api/productos/obtenerProductos');
+        const productos = await response.json();
+
+        productos.forEach(producto => {
+            const fila = document.createElement("tr");
+            fila.innerHTML = `
+        <td>${producto.id}</td>
+        <td>${producto.nombre}</td>
+        <td>${producto.precio}</td>
+        <td>${producto.cantidad}</td>
+        <td>${producto.stockMinimo}</td>
+        <td>${producto.categoria.nombre}</td>
+        <td>${producto}</td>
+
+      `;
+            tbody.appendChild(fila);
+        });
+
+    } catch (error) {
+        console.error('Error al cargar producto:', error);
+    }
 }
+
+document.addEventListener('DOMContentLoaded', obtenerProductos);
+
 function obtenerProductoPorId(id) {
     fetch(`/api/productos/obtenerProducto/${id}`)
         .then(res => {

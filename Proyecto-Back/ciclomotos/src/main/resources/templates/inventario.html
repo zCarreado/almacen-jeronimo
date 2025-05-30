@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <script src="js/producto-script.js" defer></script>
 
   </head>
   <body>
@@ -41,7 +42,7 @@
                     <button type="submit" class="btn btn-primary w-100 bg-dark border-0">Buscar Producto</button>
                 </div>
             </form>
-
+              <form hidden="" id="formProducto"></form>
             <div class="card">
                 <div class="card-header bg-primary text-white">Inventario</div>
                 <div class="card-body p-0">
@@ -50,23 +51,14 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
-                                <th>categoria</th>
-                                <th>precio</th>
+                                <th>Precio</th>
                                 <th>Stock Unitario</th>
                                 <th>StockMinimo Unitario</th>
+                                <th>Categoria</th>
                                 <th>Proveedor</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="p : ${productos}">
-                                <td th:text="${p.id}">id</td>
-                                <td th:text="${p.nombre}">nombre</td>
-                                <td th:text="${p.categoria}">categoria</td>
-                                <td th:text="${p.precio}">Precio</td>
-                                <td th:text="${p.cantidad}">Stock</td>
-                                <td th:text="${p.stockMinimo}">StockM</td>
-                                <td th:text="${p.proveedor}">proveedor</td>                                
-                            </tr>
                         </tbody>
                     </table>
                 </div>
