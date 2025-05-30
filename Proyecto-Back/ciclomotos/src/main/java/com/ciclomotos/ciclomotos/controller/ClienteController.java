@@ -15,6 +15,18 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    /**
+     * POST /api/clientes/crearCliente
+     * Crea un nuevo cliente.
+     * JSON de entrada:
+     * {
+     *   "id": 1234567890,
+     *   "nombre": "Juan Pérez",
+     *   "telefono": "3001234567",
+     *   "direccion": "Calle 123"
+     * }
+     * Respuesta: Cliente creado (incluye el campo id).
+     */
     @PostMapping("/crearCliente")
     public Cliente crearCliente(@RequestBody Cliente cliente) {
         try {
@@ -26,21 +38,63 @@ public class ClienteController {
         }
     }
 
+    /**
+     * GET /api/clientes/obtenerClientes
+     * Obtiene todos los clientes.
+     * Respuesta:
+     * [
+     *   {
+     *     "id": 1234567890,
+     *     "nombre": "Juan Pérez",
+     *     "telefono": "3001234567",
+     *     "direccion": "Calle 123"
+     *   },
+     *   ...
+     * ]
+     */
     @GetMapping("/obtenerClientes")
     public List<Cliente> obtenerClientes() {
         return clienteService.obtenerClientes();
     }
 
+    /**
+     * GET /api/clientes/obtenerCliente/{id}
+     * Obtiene un cliente por su ID.
+     * Respuesta:
+     * {
+     *   "id": 1234567890,
+     *   "nombre": "Juan Pérez",
+     *   "telefono": "3001234567",
+     *   "direccion": "Calle 123"
+     * }
+     */
     @GetMapping("/obtenerCliente/{id}")
     public Optional<Cliente> obtenerClientePorId(@PathVariable Long id) {
         return clienteService.obtenerClientePorId(id);
     }
 
+    /**
+     * PUT /api/clientes/actualizarCliente/{id}
+     * Actualiza un cliente existente.
+     * JSON de entrada:
+     * {
+     *   "nombre": "Juan Pérez",
+     *   "telefono": "3009876543",
+     *   "direccion": "Nueva dirección"
+     * }
+     * Respuesta: Cliente actualizado.
+     */
     @PutMapping("/actualizarCliente/{id}")
     public Cliente actualizarCliente(@PathVariable Long id, @RequestBody Cliente cliente) {
         return clienteService.actualizarCliente(id, cliente);
     }
 
+    /**
+     * DELETE /api/clientes/eliminarCliente/{id}
+     * Elimina un cliente por su ID.
+     * No requiere body.
+     * Respuesta: Sin contenido (código 200 o 204).
+     */
     @DeleteMapping("/eliminarCliente/{id}")
     public void eliminarCliente(@PathVariable Long id) {
         clienteService.eliminarCliente(id);
