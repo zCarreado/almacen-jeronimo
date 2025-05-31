@@ -16,19 +16,6 @@ import org.springframework.stereotype.Service;
 import com.ciclomotos.ciclomotos.model.Cliente;
 import com.ciclomotos.ciclomotos.model.DetalleVenta;
 import com.ciclomotos.ciclomotos.model.Venta;
-os.model.DetalleVenta;s.import com.ciclomotos.ciclomotos.model.Venta;s.ciclomotos.model.DetalleVenta;
-import com.ciclomotos.ciclomotos.model.Cliente;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
-import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.time.format.DateTimeFormatter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 @Service
 public class FacturaPdfService {
