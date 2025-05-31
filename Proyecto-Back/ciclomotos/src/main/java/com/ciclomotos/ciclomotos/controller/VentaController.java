@@ -2,11 +2,18 @@ package com.ciclomotos.ciclomotos.controller;
 
 import com.ciclomotos.ciclomotos.model.Venta;
 import com.ciclomotos.ciclomotos.model.DetalleVenta;
+import com.ciclomotos.ciclomotos.service.FacturaPdfService;
 import com.ciclomotos.ciclomotos.service.VentaService;
 import com.ciclomotos.ciclomotos.controller.dto.VentaConDetallesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +23,9 @@ public class VentaController {
 
     @Autowired
     private VentaService ventaService;
+
+    @Autowired
+    private FacturaPdfService facturaPdfService;
 
     /**
      * POST /api/ventas/crearVenta
@@ -71,6 +81,24 @@ public class VentaController {
         Venta ventaCreada = ventaService.crearVenta(request.getVenta(), request.getDetalles());
         return ventaService.obtenerVentaSimplePorId(ventaCreada.getId());
     }
+    @GetMapping("/factura-pdf/{id}")
+public ResponseEntity<byte[]> descargarFacturaPdf(@PathVariable Long id) {
+    try {
+        Venta venta = ventaService.obtenerVentaPorId(id)
+            .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+
+        byte[] pdfBytes = facturaPdfService.generarFacturaPdf(venta);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition.builder("attachment")
+            .filename("factura_" + venta.getId() + ".pdf").build());
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    } catch (IOException e) {
+        return ResponseEntity.internalServerError().build();
+    }
+}
 
     /**
      * GET /api/ventas/obtenerVentas
