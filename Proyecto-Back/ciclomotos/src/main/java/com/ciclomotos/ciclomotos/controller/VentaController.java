@@ -11,8 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -77,28 +80,36 @@ public class VentaController {
      * }
      */
     @PostMapping("/crearVenta")
-    public VentaConDetallesResponse crearVenta(@RequestBody VentaConDetallesRequest request) {
-        Venta ventaCreada = ventaService.crearVenta(request.getVenta(), request.getDetalles());
-        return ventaService.obtenerVentaSimplePorId(ventaCreada.getId());
+    public ResponseEntity<?> crearVenta(@Valid @RequestBody VentaConDetallesRequest request) {
+        try {
+            Venta ventaCreada = ventaService.crearVenta(request.getVenta(), request.getDetalles());
+            VentaConDetallesResponse response = ventaService.obtenerVentaSimplePorId(ventaCreada.getId());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al crear venta: " + e.getMessage());
+        }
     }
+
     @GetMapping("/factura-pdf/{id}")
-public ResponseEntity<byte[]> descargarFacturaPdf(@PathVariable Long id) {
-    try {
-        Venta venta = ventaService.obtenerVentaPorId(id)
-            .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
+    public ResponseEntity<?> descargarFacturaPdf(@PathVariable Long id) {
+        try {
+            Venta venta = ventaService.obtenerVentaPorId(id)
+                .orElseThrow(() -> new RuntimeException("Venta no encontrada"));
 
-        byte[] pdfBytes = facturaPdfService.generarFacturaPdf(venta);
+            byte[] pdfBytes = facturaPdfService.generarFacturaPdf(venta);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_PDF);
-        headers.setContentDisposition(ContentDisposition.builder("attachment")
-            .filename("factura_" + venta.getId() + ".pdf").build());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_PDF);
+            headers.setContentDisposition(ContentDisposition.builder("attachment")
+                .filename("factura_" + venta.getId() + ".pdf").build());
 
-        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
-    } catch (IOException e) {
-        return ResponseEntity.internalServerError().build();
+            return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            return ResponseEntity.internalServerError().body("Error al generar el PDF: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
-}
 
     /**
      * GET /api/ventas/obtenerVentas
@@ -148,8 +159,10 @@ public ResponseEntity<byte[]> descargarFacturaPdf(@PathVariable Long id) {
      * }
      */
     @GetMapping("/obtenerVenta/{id}")
-    public Optional<Venta> obtenerVentaPorId(@PathVariable Long id) {
-        return ventaService.obtenerVentaPorId(id);
+    public ResponseEntity<?> obtenerVentaPorId(@PathVariable Long id) {
+        Optional<Venta> venta = ventaService.obtenerVentaPorId(id);
+        return venta.<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body("Venta no encontrada con id: " + id));
     }
 
     /**
@@ -178,8 +191,13 @@ public ResponseEntity<byte[]> descargarFacturaPdf(@PathVariable Long id) {
      * }
      */
     @GetMapping("/obtenerVentaSimple/{id}")
-    public VentaConDetallesResponse obtenerVentaSimplePorId(@PathVariable Long id) {
-        return ventaService.obtenerVentaSimplePorId(id);
+    public ResponseEntity<?> obtenerVentaSimplePorId(@PathVariable Long id) {
+        VentaConDetallesResponse response = ventaService.obtenerVentaSimplePorId(id);
+        if (response != null) {
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(404).body("Venta no encontrada con id: " + id);
+        }
     }
 
     /**
@@ -194,8 +212,17 @@ public ResponseEntity<byte[]> descargarFacturaPdf(@PathVariable Long id) {
      * Respuesta: Venta actualizada (igual formato que GET /obtenerVenta/{id}).
      */
     @PutMapping("/actualizarVenta/{id}")
-    public Venta actualizarVenta(@PathVariable Long id, @RequestBody Venta venta) {
-        return ventaService.actualizarVenta(id, venta);
+    public ResponseEntity<?> actualizarVenta(@PathVariable Long id, @Valid @RequestBody Venta venta) {
+        try {
+            Venta actualizada = ventaService.actualizarVenta(id, venta);
+            if (actualizada != null) {
+                return ResponseEntity.ok(actualizada);
+            } else {
+                return ResponseEntity.status(404).body("No se encontró la venta con id: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al actualizar venta: " + e.getMessage());
+        }
     }
 
     /**
@@ -205,44 +232,47 @@ public ResponseEntity<byte[]> descargarFacturaPdf(@PathVariable Long id) {
      * Respuesta: Sin contenido (código 204).
      */
     @DeleteMapping("/eliminarVenta/{id}")
-    public void eliminarVenta(@PathVariable Long id) {
-        ventaService.eliminarVenta(id);
-    }
-}
-
-// DTO para recibir la venta y sus detalles en una sola petición
-/**
- * Ejemplo de JSON de entrada para crear una venta:
- * {
- *   "venta": {
- *     "fecha": "2025-05-30T14:30:00",
- *     "cliente": { "id": 1 }
- *   },
- *   "detalles": [
- *     {
- *       "producto": { "id": 10 },
- *       "cantidad": 2
- *     }
- *   ]
- * }
- */
-class VentaConDetallesRequest {
-    private Venta venta;
-    private List<DetalleVenta> detalles;
-
-    public Venta getVenta() {
-        return venta;
+    public ResponseEntity<?> eliminarVenta(@PathVariable Long id) {
+        Optional<Venta> venta = ventaService.obtenerVentaPorId(id);
+        if (venta.isPresent()) {
+            ventaService.eliminarVenta(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(404).body("No se encontró la venta con id: " + id);
+        }
     }
 
-    public void setVenta(Venta venta) {
-        this.venta = venta;
+    // Manejo global de errores de validación
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errores = new StringBuilder("Errores de validación: ");
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errores.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
+        }
+        return ResponseEntity.badRequest().body(errores.toString());
     }
 
-    public List<DetalleVenta> getDetalles() {
-        return detalles;
-    }
+    // DTO para recibir la venta y sus detalles en una sola petición
+    public static class VentaConDetallesRequest {
+        
+        private Venta venta;
 
-    public void setDetalles(List<DetalleVenta> detalles) {
-        this.detalles = detalles;
+        private List<DetalleVenta> detalles;
+
+        public Venta getVenta() {
+            return venta;
+        }
+
+        public void setVenta(Venta venta) {
+            this.venta = venta;
+        }
+
+        public List<DetalleVenta> getDetalles() {
+            return detalles;
+        }
+
+        public void setDetalles(List<DetalleVenta> detalles) {
+            this.detalles = detalles;
+        }
     }
 }

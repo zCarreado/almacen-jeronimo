@@ -4,8 +4,11 @@ import com.ciclomotos.ciclomotos.model.Usuario;
 import com.ciclomotos.ciclomotos.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +38,13 @@ public class UsuarioController {
      * }
      */
     @PostMapping
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
-        Usuario creado = usuarioService.crearUsuario(usuario);
-        return ResponseEntity.ok(creado);
+    public ResponseEntity<?> crearUsuario(@Valid @RequestBody Usuario usuario) {
+        try {
+            Usuario creado = usuarioService.crearUsuario(usuario);
+            return ResponseEntity.ok(creado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al crear usuario: " + e.getMessage());
+        }
     }
 
     /**
@@ -73,9 +80,10 @@ public class UsuarioController {
      * }
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> obtenerUsuarioPorId(@PathVariable Long id) {
+    public ResponseEntity<?> obtenerUsuarioPorId(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.obtenerUsuarioPorId(id);
-        return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return usuario.<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body("Usuario no encontrado con id: " + id));
     }
 
     /**
@@ -91,9 +99,10 @@ public class UsuarioController {
      * }
      */
     @GetMapping("/username/{username}")
-    public ResponseEntity<Usuario> obtenerUsuarioPorUsername(@PathVariable String username) {
+    public ResponseEntity<?> obtenerUsuarioPorUsername(@PathVariable String username) {
         Optional<Usuario> usuario = usuarioService.obtenerUsuarioPorUsername(username);
-        return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return usuario.<ResponseEntity<?>>map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(404).body("Usuario no encontrado con username: " + username));
     }
 
     /**
@@ -116,12 +125,16 @@ public class UsuarioController {
      * }
      */
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        Usuario actualizado = usuarioService.actualizarUsuario(id, usuario);
-        if (actualizado != null) {
-            return ResponseEntity.ok(actualizado);
-        } else {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> actualizarUsuario(@PathVariable Long id, @Valid @RequestBody Usuario usuario) {
+        try {
+            Usuario actualizado = usuarioService.actualizarUsuario(id, usuario);
+            if (actualizado != null) {
+                return ResponseEntity.ok(actualizado);
+            } else {
+                return ResponseEntity.status(404).body("No se encontró el usuario con id: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al actualizar usuario: " + e.getMessage());
         }
     }
 
@@ -132,8 +145,23 @@ public class UsuarioController {
      * Respuesta: Sin contenido (código 204).
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
-        usuarioService.eliminarUsuario(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> eliminarUsuario(@PathVariable Long id) {
+        Optional<Usuario> usuario = usuarioService.obtenerUsuarioPorId(id);
+        if (usuario.isPresent()) {
+            usuarioService.eliminarUsuario(id);
+            return ResponseEntity.ok("Usuario eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(404).body("No se encontró el usuario con id: " + id);
+        }
+    }
+
+    // Manejo global de errores de validación
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errores = new StringBuilder("Errores de validación: ");
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errores.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
+        }
+        return ResponseEntity.badRequest().body(errores.toString());
     }
 }

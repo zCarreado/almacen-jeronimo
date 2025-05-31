@@ -1,7 +1,7 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 @Entity
@@ -13,6 +13,7 @@ public class Categoria {
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "El nombre de la categoría es obligatorio")
     @Column(name = "nombre")
     private String nombre;
 

@@ -3,18 +3,17 @@ package com.ciclomotos.ciclomotos.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import com.ciclomotos.ciclomotos.model.Producto;
 import com.ciclomotos.ciclomotos.service.ProductoService;
+
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -38,8 +37,13 @@ public class ProductoController {
      * Respuesta: Producto creado (incluye el campo id).
      */
     @PostMapping("/crearProducto")
-    public Producto crearProducto(@RequestBody Producto producto) {
-        return productoService.crearProducto(producto);
+    public ResponseEntity<?> crearProducto(@Valid @RequestBody Producto producto) {
+        try {
+            Producto creado = productoService.crearProducto(producto);
+            return ResponseEntity.ok(creado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al crear producto: " + e.getMessage());
+        }
     }
 
     /**
@@ -79,8 +83,13 @@ public class ProductoController {
      * }
      */
     @GetMapping("/obtenerProducto/{id}")
-    public Producto obtenerProductoPorId(@PathVariable Long id) {
-        return productoService.obtenerProductoPorId(id);
+    public ResponseEntity<?> obtenerProductoPorId(@PathVariable Long id) {
+        Producto producto = productoService.obtenerProductoPorId(id);
+        if (producto != null) {
+            return ResponseEntity.ok(producto);
+        } else {
+            return ResponseEntity.status(404).body("Producto no encontrado con id: " + id);
+        }
     }
 
     /**
@@ -98,8 +107,17 @@ public class ProductoController {
      * Respuesta: Producto actualizado.
      */
     @PutMapping("/actualizarProducto/{id}")
-    public Producto actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
-        return productoService.actualizarProducto(id, producto);
+    public ResponseEntity<?> actualizarProducto(@PathVariable Long id, @Valid @RequestBody Producto producto) {
+        try {
+            Producto actualizado = productoService.actualizarProducto(id, producto);
+            if (actualizado != null) {
+                return ResponseEntity.ok(actualizado);
+            } else {
+                return ResponseEntity.status(404).body("No se encontró el producto con id: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al actualizar producto: " + e.getMessage());
+        }
     }
 
     /**
@@ -109,22 +127,14 @@ public class ProductoController {
      * Respuesta: Sin contenido (código 200 o 204).
      */
     @DeleteMapping("/eliminarProducto/{id}")
-    public void eliminarProducto(@PathVariable Long id) {
-        productoService.eliminarProducto(id);
-    }
-
-    /**
-     * POST /api/productos/registrarCompra
-     * Registra una compra de un producto (aumenta el stock).
-     * Parámetros (form-data o URL):
-     *   productoId: 1
-     *   cantidad: 5
-     *   observaciones: "Compra de reposición"
-     * Respuesta: true o false
-     */
-    @PostMapping("/registrarCompra")
-    public boolean registrarCompra(@RequestParam Long productoId, @RequestParam int cantidad, @RequestParam(required = false) String observaciones) {
-        return productoService.registrarCompra(productoId, cantidad, observaciones);
+    public ResponseEntity<?> eliminarProducto(@PathVariable Long id) {
+        Producto producto = productoService.obtenerProductoPorId(id);
+        if (producto != null) {
+            productoService.eliminarProducto(id);
+            return ResponseEntity.ok("Producto eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(404).body("No se encontró el producto con id: " + id);
+        }
     }
 
     /**
@@ -138,8 +148,17 @@ public class ProductoController {
      * Respuesta: true o false
      */
     @PutMapping("/agregarStock")
-    public boolean agregarStock(@RequestBody AgregarStockRequest request) {
-        return productoService.agregarStock(request.getProductoId(), request.getCantidad());
+    public ResponseEntity<?> agregarStock(@Valid @RequestBody AgregarStockRequest request) {
+        try {
+            boolean resultado = productoService.agregarStock(request.getProductoId(), request.getCantidad());
+            if (resultado) {
+                return ResponseEntity.ok(true);
+            } else {
+                return ResponseEntity.status(404).body("No se encontró el producto con id: " + request.getProductoId());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al agregar stock: " + e.getMessage());
+        }
     }
 
     /**
@@ -164,21 +183,40 @@ public class ProductoController {
      * Respuesta: El producto creado o actualizado.
      */
     @PostMapping("/agregarOActualizarPorNombre")
-    public Producto agregarOActualizarPorNombre(@RequestBody Producto producto) {
-        return productoService.agregarOActualizarProductoPorNombre(
-            producto.getNombre(),
-            producto.getCantidad(),
-            producto.getPrecio()
-        );
+    public ResponseEntity<?> agregarOActualizarPorNombre(@Valid @RequestBody Producto producto) {
+        try {
+            Producto resultado = productoService.agregarOActualizarProductoPorNombre(
+                producto.getNombre(),
+                producto.getCantidad(),
+                producto.getPrecio()
+            );
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al agregar o actualizar producto: " + e.getMessage());
+        }
     }
 
     // DTO para agregar stock
     public static class AgregarStockRequest {
+        @NotNull(message = "El id del producto es obligatorio")
         private Long productoId;
+
+        @Min(value = 1, message = "La cantidad debe ser mayor que cero")
         private int cantidad;
+
         public Long getProductoId() { return productoId; }
         public void setProductoId(Long productoId) { this.productoId = productoId; }
         public int getCantidad() { return cantidad; }
         public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    }
+
+    // Manejo global de errores de validación
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errores = new StringBuilder("Errores de validación: ");
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errores.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
+        }
+        return ResponseEntity.badRequest().body(errores.toString());
     }
 }

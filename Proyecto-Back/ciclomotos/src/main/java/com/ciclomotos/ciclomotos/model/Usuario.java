@@ -1,6 +1,7 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "usuario")
@@ -11,15 +12,21 @@ public class Usuario {
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "El nombre es obligatorio")
     @Column(name = "nombre", length = 100)
     private String nombre;
 
+    @NotBlank(message = "El nombre de usuario es obligatorio")
+    @Size(max = 100, message = "El nombre de usuario no puede tener más de 100 caracteres")
     @Column(name = "username", unique = true, nullable = false, length = 100)
     private String username;
 
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, max = 255, message = "La contraseña debe tener entre 6 y 255 caracteres")
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
+    @NotNull(message = "El tipo de usuario es obligatorio")
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo", nullable = false, length = 20)
     private TipoUsuario tipo;

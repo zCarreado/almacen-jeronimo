@@ -4,8 +4,12 @@ import com.ciclomotos.ciclomotos.model.Producto;
 import com.ciclomotos.ciclomotos.model.Proveedor;
 import com.ciclomotos.ciclomotos.service.ProveedorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +39,13 @@ public class ProveedorController {
      * }
      */
     @PostMapping("/crearProveedor")
-    public Proveedor crearProveedor(@RequestBody Proveedor proveedor) {
-        return proveedorService.crearProveedor(proveedor);
+    public ResponseEntity<?> crearProveedor(@Valid @RequestBody Proveedor proveedor) {
+        try {
+            Proveedor creado = proveedorService.crearProveedor(proveedor);
+            return ResponseEntity.ok(creado);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al crear proveedor: " + e.getMessage());
+        }
     }
 
     /**
@@ -94,8 +103,13 @@ public class ProveedorController {
      * }
      */
     @GetMapping("/obtenerProveedor/{id}")
-    public Optional<Proveedor> obtenerProveedorPorId(@PathVariable Long id) {
-        return proveedorService.obtenerProveedorPorId(id);
+    public ResponseEntity<?> obtenerProveedorPorId(@PathVariable Long id) {
+        Optional<Proveedor> proveedor = proveedorService.obtenerProveedorPorId(id);
+        if (proveedor.isPresent()) {
+            return ResponseEntity.ok(proveedor.get());
+        } else {
+            return ResponseEntity.status(404).body("Proveedor no encontrado con id: " + id);
+        }
     }
 
     /**
@@ -116,10 +130,13 @@ public class ProveedorController {
      * ]
      */
     @GetMapping("/productos/{id}")
-    public List<Producto> obtenerProductosPorProveedor(@PathVariable Long id) {
-        return proveedorService.obtenerProveedorPorId(id)
-                .map(proveedor -> proveedor.getProductos())
-                .orElse(List.of());
+    public ResponseEntity<?> obtenerProductosPorProveedor(@PathVariable Long id) {
+        Optional<Proveedor> proveedor = proveedorService.obtenerProveedorPorId(id);
+        if (proveedor.isPresent()) {
+            return ResponseEntity.ok(proveedor.get().getProductos());
+        } else {
+            return ResponseEntity.status(404).body("Proveedor no encontrado con id: " + id);
+        }
     }
 
     /**
@@ -141,8 +158,17 @@ public class ProveedorController {
      * }
      */
     @PutMapping("/actualizarProveedor/{id}")
-    public Proveedor actualizarProveedor(@PathVariable Long id, @RequestBody Proveedor proveedor) {
-        return proveedorService.actualizarProveedor(id, proveedor);
+    public ResponseEntity<?> actualizarProveedor(@PathVariable Long id, @Valid @RequestBody Proveedor proveedor) {
+        try {
+            Proveedor actualizado = proveedorService.actualizarProveedor(id, proveedor);
+            if (actualizado != null) {
+                return ResponseEntity.ok(actualizado);
+            } else {
+                return ResponseEntity.status(404).body("No se encontró el proveedor con id: " + id);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al actualizar proveedor: " + e.getMessage());
+        }
     }
 
     /**
@@ -152,7 +178,23 @@ public class ProveedorController {
      * Respuesta: Sin contenido (código 200 o 204).
      */
     @DeleteMapping("/eliminarProveedor/{id}")
-    public void eliminarProveedor(@PathVariable Long id) {
-        proveedorService.eliminarProveedor(id);
+    public ResponseEntity<?> eliminarProveedor(@PathVariable Long id) {
+        Optional<Proveedor> proveedor = proveedorService.obtenerProveedorPorId(id);
+        if (proveedor.isPresent()) {
+            proveedorService.eliminarProveedor(id);
+            return ResponseEntity.ok("Proveedor eliminado correctamente.");
+        } else {
+            return ResponseEntity.status(404).body("No se encontró el proveedor con id: " + id);
+        }
+    }
+
+    // Manejo global de errores de validación
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        StringBuilder errores = new StringBuilder("Errores de validación: ");
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errores.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
+        }
+        return ResponseEntity.badRequest().body(errores.toString());
     }
 }

@@ -8,11 +8,10 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.Column;
 
 @Entity
 @Table(name = "producto")
@@ -24,26 +23,35 @@ public class Producto {
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "El nombre del producto es obligatorio")
     @Column(name = "nombre")
     private String nombre;
 
+    @NotNull(message = "El precio es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = false, message = "El precio debe ser mayor que cero")
     @Column(name = "precio", precision = 10, scale = 2)
     private java.math.BigDecimal precio;
 
+    @NotNull(message = "La cantidad es obligatoria")
+    @Min(value = 0, message = "La cantidad no puede ser negativa")
     @Column(name = "cantidad")
     private Integer cantidad;
 
+    @NotNull(message = "El stock mínimo es obligatorio")
+    @Min(value = 0, message = "El stock mínimo no puede ser negativo")
     @Column(name = "stock_minimo")
     private Integer stockMinimo;
 
     @ManyToOne
     @JoinColumn(name = "categoria")
     @JsonIgnoreProperties({"productos"})
+    @NotNull(message = "La categoría es obligatoria")
     private Categoria categoria;
 
     @ManyToOne
     @JoinColumn(name = "proveedor_id")
     @JsonIgnoreProperties({"productos"})
+    @NotNull(message = "El proveedor es obligatorio")
     private Proveedor proveedor;
 
     // Getters y Setters
