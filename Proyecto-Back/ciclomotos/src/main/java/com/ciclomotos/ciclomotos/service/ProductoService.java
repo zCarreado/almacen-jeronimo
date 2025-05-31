@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -138,5 +139,24 @@ public class ProductoService {
 
     public List<Producto> buscarPorNombre(String nombre) {
         return productoRepository.findByNombreContainingIgnoreCase(nombre);
+    }
+
+    public Producto agregarOActualizarProductoPorNombre(String nombre, int cantidad, BigDecimal precio) {
+        Producto producto = productoRepository.findByNombreIgnoreCase(nombre).orElse(null);
+        if (producto != null) {
+            // Actualizar stock y precio si es necesario
+            producto.setCantidad(producto.getCantidad() + cantidad);
+            if (precio != null && !precio.equals(producto.getPrecio())) {
+                producto.setPrecio(precio);
+            }
+            return productoRepository.save(producto);
+        } else {
+            // Crear nuevo producto
+            Producto nuevo = new Producto();
+            nuevo.setNombre(nombre);
+            nuevo.setCantidad(cantidad);
+            nuevo.setPrecio(precio);
+            return productoRepository.save(nuevo);
+        }
     }
 }

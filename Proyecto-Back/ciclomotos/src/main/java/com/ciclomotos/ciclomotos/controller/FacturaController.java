@@ -12,6 +12,8 @@ import java.util.Optional;
 @RequestMapping("/api/facturas")
 public class FacturaController {
 
+    //esta no se esta usando, pero la dejo por si acaso
+
     @Autowired
     private FacturaService facturaService;
 

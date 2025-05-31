@@ -1,6 +1,7 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,12 +15,16 @@ public class Proveedor {
     @Column(name = "id")
     private Long id;
 
+    @NotBlank(message = "El nombre del proveedor es obligatorio")
     @Column(name = "nombre")
     private String nombre;
 
+    @Email(message = "El email no es válido")
+    @NotBlank(message = "El email es obligatorio")
     @Column(name = "email")
     private String email;
 
+    @NotBlank(message = "El teléfono es obligatorio")
     @Column(name = "telefono")
     private String telefono;
 

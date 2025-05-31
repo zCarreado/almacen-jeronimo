@@ -1,6 +1,7 @@
 package com.ciclomotos.ciclomotos.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,28 +15,38 @@ public class Venta {
     @Column(name = "id")
     private Long id;
 
+    @NotNull(message = "La fecha es obligatoria")
     @Column(name = "fecha", nullable = false)
     private LocalDateTime fecha;
 
+    @NotNull(message = "El subtotal es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = true, message = "El subtotal no puede ser negativo")
     @Column(name = "subtotal", precision = 10, scale = 2)
-    private BigDecimal subtotal;  // Nuevo campo
+    private BigDecimal subtotal;
 
+    @NotNull(message = "El IVA es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = true, message = "El IVA no puede ser negativo")
     @Column(name = "iva", precision = 10, scale = 2)
-    private BigDecimal iva;       // Nuevo campo
+    private BigDecimal iva;
 
+    @NotNull(message = "El total es obligatorio")
+    @DecimalMin(value = "0.0", inclusive = true, message = "El total no puede ser negativo")
     @Column(name = "total", precision = 10, scale = 2)
     private BigDecimal total;
-    
+
+    @NotNull(message = "El cliente es obligatorio")
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     @JsonIgnoreProperties({"ventas"})
     private Cliente cliente;
 
+    @NotNull(message = "Los detalles de la venta son obligatorios")
+    @Size(min = 1, message = "Debe haber al menos un detalle de venta")
     @OneToMany(mappedBy = "venta", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("venta")
     private java.util.List<DetalleVenta> detalles;
 
-    // Getters y setters nuevos para subtotal e iva
+    // Getters y setters
 
     public BigDecimal getSubtotal() {
         return subtotal;
@@ -93,7 +104,6 @@ public class Venta {
         this.detalles = detalles;
     }
 
-    
     @Override
     public String toString() {
         return "Venta{" +

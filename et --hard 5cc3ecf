@@ -1,0 +1,16 @@
+[33m5cc3ecf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mBackEnd[m[33m, [m[1;31morigin/BackEnd[m[33m)[m Implementar controlador y servicio para generación de reportes de ventas
+[33m676453a[m Agregado metodo para buscar producto por nombre
+[33maf98d72[m Agregar IVA a las ventas
+[33m643df8e[m Agregar iva al las ventas (no terminado)
+[33mccb041c[m Ajustes nueva BD
+[33m7ee75bf[m Base PostgreSQL
+[33m53681e4[m Error categorias (arreglado)
+[33m77a9cb0[m 2
+[33m35e367d[m Arreglos varios
+[33m0e27514[m Modulo de ventas(sin terminar)
+[33m798e3bb[m corrección de mapeo
+[33m28b38a1[m inclusion de la base de datos
+[33m8d5c69c[m Update ProductoService.java
+[33m66e2481[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Corrección del back
+[33m3a8818c[m Principo del back
+[33m866217a[m[33m ([m[1;31morigin/DataBase[m[33m)[m Initial commit
