@@ -23,7 +23,7 @@ function registrarProducto() {
                 return res.json();
             })
             .then(data => {
-                console.log("Respuesta del servidor:", data); // 👈 verifica en consola
+                console.log("Respuesta del servidor:", data);
                 alert("Producto registrado correctamente:\n" + JSON.stringify(data, null, 2));
                 form.reset();
             })
@@ -104,7 +104,7 @@ function eliminarProducto(id) {
         .then(res => {
             if (!res.ok) throw new Error('Error al eliminar producto');
             alert('Producto eliminado correctamente');
-            cargarProductoes(); // Recargar lista después de eliminar
+            cargarProductoes();
         })
         .catch(err => alert(err.message));
 }

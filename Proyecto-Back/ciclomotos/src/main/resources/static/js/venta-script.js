@@ -1,4 +1,4 @@
-let productosCargados = []; // global
+let productosCargados = [];
 
 async function obtenerProductos() {
     const tbody = document.querySelector("#formProducto table tbody");
@@ -8,7 +8,7 @@ async function obtenerProductos() {
         const response = await fetch('api/productos/obtenerProductos');
         const productos = await response.json();
 
-        productosCargados = productos; // <-- Guarda todos los productos
+        productosCargados = productos;
 
         productos.forEach(producto => {
             const fila = document.createElement("tr");
@@ -35,10 +35,9 @@ document.addEventListener('DOMContentLoaded', obtenerProductos);
 function agregarAlCarrito(producto) {
     const carritoBody = document.getElementById('carritoBody');
 
-    // Verificar si el producto ya está en el carrito
     const filaExistente = carritoBody.querySelector(`tr[data-id='${producto.id}']`);
     if (filaExistente) {
-        // Si ya está, simplemente aumenta la cantidad
+
         const cantidadInput = filaExistente.querySelector('.cantidad-input');
         cantidadInput.value = parseInt(cantidadInput.value) + 1;
         actualizarSubtotalFila(filaExistente);
@@ -69,7 +68,6 @@ function agregarAlCarrito(producto) {
 
     carritoBody.appendChild(fila);
 
-    // Escuchar cambios en la cantidad para actualizar los totales
     const inputCantidad = fila.querySelector('.cantidad-input');
     inputCantidad.addEventListener('input', () => {
         if (parseInt(inputCantidad.value) < 1) inputCantidad.value = 1;
@@ -113,14 +111,13 @@ function crearVenta() {
         e.preventDefault();
 
         const clienteId = parseInt(document.getElementById('cliente').value);
-        const detalles = obtenerDetallesDeTabla(); // Debe devolver [{ producto: { id, nombreProducto, precioUnitario }, cantidad, subtotal }, ...]
+        const detalles = obtenerDetallesDeTabla();
 
         if (!clienteId || detalles.length === 0) {
             alert('Debes seleccionar un cliente y al menos un producto.');
             return;
         }
 
-        // Preparamos objeto para el backend (solo ids y cantidades)
         const ventaParaEnviar = {
             venta: {
                 fecha: new Date().toISOString(),
@@ -145,12 +142,7 @@ function crearVenta() {
                 throw new Error('Error al registrar la venta');
             }
 
-            // Aquí obtenemos el JSON completo del backend
             const ventaRegistrada = await response.json();
-
-            // Mostrar en consola y en alerta el JSON formateado
-            console.log("Venta registrada:", ventaRegistrada);
-            alert('Venta registrada correctamente:\n' + JSON.stringify(ventaRegistrada, null, 2));
 
             form.reset();
             document.querySelector('#tablaCarrito tbody').innerHTML = '';
@@ -173,7 +165,7 @@ function obtenerDetallesDeTabla() {
 
     filas.forEach(fila => {
         const productoId = parseInt(fila.querySelector(".id-producto").textContent);
-        const productoCompleto = productosCargados.find(p => p.id === productoId); // aquí lo buscas
+        const productoCompleto = productosCargados.find(p => p.id === productoId);
 
         if (!productoCompleto) {
             console.warn("Producto no encontrado con ID:", productoId);

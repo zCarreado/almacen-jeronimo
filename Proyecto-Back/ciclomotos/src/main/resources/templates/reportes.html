@@ -9,6 +9,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+    <script src="js/reportes-script.js" defer></script>
   </head>
   <body>
 
@@ -43,8 +45,8 @@
             <div class="col-md-4">
                 <div class="card shadow-sm">
                 <div class="card-body">
-                    <h6>Ingresos por ventas</h6>
-                    <h4 th:text="${ventaPeriodo}">$40000</h4>
+                    <h6>Ingresos por ventas año</h6>
+                    <h4 id="ingresoVentasAnual"></h4>
                     <small th:text="${comparacionVentaPeriodo}" class="text-success"></small>
                 </div>
                 </div>
@@ -52,29 +54,44 @@
             <div class="col-md-4">
                 <div class="card shadow-sm">
                 <div class="card-body">
-                    <h6>Ingresos por trabajo</h6>
-                    <h4 th:text="${trabajoPeriodo}">$80000</h4>
+                    <h6>Ingresos por ventas mes</h6>
+                    <h4 id="ingresoVentasMes"></h4>
                     <small th:text="${comparacionTrabajoPeriodo}" class="text-success">+33% mes a mes</small>
                 </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                <div class="card-body">
-                    <h6>Total</h6>
-                    <h4 th:text="${totalPeriodo}">$530000</h4>
-                    <small th:text="${comparacionTotalPeriodo}" class="text-danger">-8% mes a mes</small>
+                <div class="col-md-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h6>Ingreso por ventas semana</h6>
+                            <h4 id="ingresoVentasSemana"></h4>
+                            <small th:text="${comparacionTotalPeriodo}" class="text-danger">-8% mes a mes</small>
+                        </div>
+                    </div>
                 </div>
-                </div>
-            </div>
             </div>
 
             <!-- Gráfico -->
             <div class="grafico-placeholder">
-
+                <canvas id="graficoVentas" width="400" height="200"></canvas>
             </div>
         </div>
         </div>
+              <table class="border-1">
+                  <thead>
+                  <tr>
+                      <th>Fecha</th>
+                      <th>Cliente</th>
+                      <th>Producto</th>
+                      <th>Precio Unitario</th>
+                      <th>Cantidad</th>
+                      <th>Total</th>
+                  </tr>
+                  </thead>
+                  <tbody id="tablaVentasBody">
+                  </tbody>
+              </table>
+
           </main>
       </div>
   </div>

@@ -94,7 +94,7 @@ function eliminarProveedor(id) {
         .then(res => {
             if (!res.ok) throw new Error('Error al eliminar proveedor');
             alert('Proveedor eliminado correctamente');
-            cargarProveedores(); // Recargar lista después de eliminar
+            cargarProveedores();
         })
         .catch(err => alert(err.message));
 }
