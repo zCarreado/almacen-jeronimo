@@ -21,7 +21,7 @@ function registrarUsuario() {
                 return res.json();
             })
             .then(data => {
-                alert("Usuario registrado correctamente:\n" + JSON.stringify(data, null, 2));
+                alert("Usuario registrado correctamente:\n" );
                 form.reset();
             })
             .catch(err => alert("Error: " + err.message));
@@ -57,7 +57,6 @@ function obtenerUsuarioPorId(id) {
             return res.json();
         })
         .then(data => {
-            alert("Usuario:\n" + JSON.stringify(data, null, 2));
         })
         .catch(err => alert(err.message));
 }
