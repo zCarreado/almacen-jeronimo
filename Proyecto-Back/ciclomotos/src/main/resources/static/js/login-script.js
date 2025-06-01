@@ -13,7 +13,6 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         }
 
         const usuarioData = await response.json();
-        alert(JSON.stringify(usuarioData, null, 2));
 
         if (usuarioData.password === contrasena) {
             window.location.href = "/venta";
