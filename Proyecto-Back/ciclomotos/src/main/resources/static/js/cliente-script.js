@@ -203,6 +203,34 @@ function registrarBusquedaCliente() {
 }
 document.addEventListener('DOMContentLoaded', registrarBusquedaCliente);
 
+function mostrarClientesEnTabla(clientes) {
+  const tbody = document.querySelector("table tbody");
+  tbody.innerHTML = "";
+  if (!clientes || clientes.length === 0) {
+    const fila = document.createElement("tr");
+    fila.innerHTML = '<td colspan="6" class="text-center">No se encontraron clientes</td>';
+    tbody.appendChild(fila);
+    return;
+  }
+  clientes.forEach(cliente => {
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td class="text-center">${cliente.id}</td>
+      <td>${cliente.nombre}</td>
+      <td>${cliente.email}</td>
+      <td>${cliente.telefono}</td>
+      <td>${cliente.direccion}</td>
+      <td class="text-center">
+        <button class="btn btn-warning btn-sm me-2" onclick="editarCliente('${cliente.id}')">
+          <i class="bi bi-pencil-square"></i> Editar
+        </button>
+      </td>
+    `;
+    tbody.appendChild(fila);
+  });
+}
+
+
 // Función para editar cliente
 function editarCliente(id) {
     fetch(`/api/clientes/obtenerCliente/${id}`)
