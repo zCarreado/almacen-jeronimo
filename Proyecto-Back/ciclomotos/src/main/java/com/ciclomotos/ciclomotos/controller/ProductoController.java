@@ -3,6 +3,7 @@ package com.ciclomotos.ciclomotos.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -130,8 +131,14 @@ public class ProductoController {
     public ResponseEntity<?> eliminarProducto(@PathVariable Long id) {
         Producto producto = productoService.obtenerProductoPorId(id);
         if (producto != null) {
-            productoService.eliminarProducto(id);
-            return ResponseEntity.ok("Producto eliminado correctamente.");
+            try {
+                productoService.eliminarProducto(id);
+                return ResponseEntity.ok("Producto eliminado correctamente.");
+            } catch (DataIntegrityViolationException ex) {
+                return ResponseEntity.status(409).body("No se puede eliminar el producto porque está asociado a ventas u otros registros.");
+            } catch (Exception ex) {
+                return ResponseEntity.status(500).body("Error al eliminar producto: " + ex.getMessage());
+            }
         } else {
             return ResponseEntity.status(404).body("No se encontró el producto con id: " + id);
         }
