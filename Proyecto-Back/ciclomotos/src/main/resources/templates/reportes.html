@@ -2,98 +2,131 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Módulo de Reportes</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
-    <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
-    <script src="js/reportes-script.js" defer></script>
-  </head>
-  <body>
+  <meta charset="UTF-8" />
+  <title>Módulo de Reportes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css" />
+  <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="../static/css/aside-styles.css" />
+  <style>
+    .totales-container > div {
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
 
+<body>
+  <!-- Navbar superior -->
   <header th:insert="~{fragments/navbar::navbar}"></header>
 
-  <!-- Contenedor con aside + contenido -->
   <div class="container-fluid m-0 p-0">
-      <!-- alineador de asside y main-->
-      <div class="row g-0">
-          <!-- Aside a la izquierda -->
-          <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
-          <main class="row g-0 col-9"> <!-- fila sin espacios -->
-        <div class="container">
-            <div class="header d-flex align-items-center">
-                <i class="bi bi-graph-up-arrow me-3 icono-reportes" style="font-size: 8em;"></i>
-                <div>
-                <h4 class="mb-0">Reportes</h4>
-                <small>Ver reportes financieros</small>
-                </div>
-            </div>
-              <!-- Contenido -->
-        <div class="container my-4">
-            <!-- Filtros -->
-            <div class="mb-3">
-            <button class="btn btn-outline-primary btn-sm border-0">Diario</button>
-            <button class="btn btn-outline-primary btn-sm border-0">Semanal</button>
-            <button class="btn btn-outline-primary btn-sm border-0">Mensual</button>
-            <button class="btn btn-outline-primary btn-sm border-0">Anual</button>
-            </div>
+    <div class="row g-0">
+      <!-- Menú lateral azul funcional -->
+      <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky" style="height: 100vh;"></aside>
 
-            <div class="row g-3 mb-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                <div class="card-body">
-                    <h6>Ingresos por ventas año</h6>
-                    <h4 id="ingresoVentasAnual"></h4>
-                    <small th:text="${comparacionVentaPeriodo}" class="text-success"></small>
-                </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                <div class="card-body">
-                    <h6>Ingresos por ventas mes</h6>
-                    <h4 id="ingresoVentasMes"></h4>
-                    <small th:text="${comparacionTrabajoPeriodo}" class="text-success">+33% mes a mes</small>
-                </div>
-                </div>
-            </div>
-                <div class="col-md-4">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <h6>Ingreso por ventas semana</h6>
-                            <h4 id="ingresoVentasSemana"></h4>
-                            <small th:text="${comparacionTotalPeriodo}" class="text-danger">-8% mes a mes</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Gráfico -->
-            <div class="grafico-placeholder">
-                <canvas id="graficoVentas" width="400" height="200"></canvas>
-            </div>
+      <!-- Contenido principal -->
+      <main class="col-10 px-4 py-4" style="overflow-y: auto; max-height: 100vh;">
+        <div class="header d-flex align-items-center mb-4">
+          <i class="bi bi-graph-up-arrow me-3 icono-reportes" style="font-size: 4rem;"></i>
+          <div>
+            <h4 class="mb-0">Reportes</h4>
+            <small>Ver reportes financieros</small>
+          </div>
         </div>
-        </div>
-              <table class="border-1">
-                  <thead>
-                  <tr>
-                      <th>Fecha</th>
-                      <th>Cliente</th>
-                      <th>Producto</th>
-                      <th>Precio Unitario</th>
-                      <th>Cantidad</th>
-                      <th>Total</th>
-                  </tr>
-                  </thead>
-                  <tbody id="tablaVentasBody">
-                  </tbody>
-              </table>
 
-          </main>
-      </div>
+        <!-- Totales año, mes y día actuales -->
+        <div class="row totales-container">
+          <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+              <h6>Ingresos por ventas año</h6>
+              <h4 id="ingresoVentasAnual">$0.00</h4>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+              <h6>Ingresos por ventas mes</h6>
+              <h4 id="ingresoVentasMes">$0.00</h4>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card shadow-sm p-3">
+              <h6>Ingresos por ventas día</h6>
+              <h4 id="ingresoVentasSemana">$0.00</h4>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buscadores -->
+        <div class="row mt-4 g-3">
+          <div class="col-md-4">
+            <label for="inputAnio" class="form-label">Buscar por Año:</label>
+            <div class="input-group">
+              <input
+                type="number"
+                id="inputAnio"
+                min="2000"
+                max="2100"
+                class="form-control"
+                placeholder="2025"
+              />
+              <button id="btnBuscarAnio" class="btn btn-primary">Buscar Año</button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="inputMesAnio" class="form-label">Buscar por Mes y Año:</label>
+            <div class="input-group">
+              <input
+                type="number"
+                id="inputMesAnio"
+                min="2000"
+                max="2100"
+                class="form-control"
+                placeholder="2025"
+                style="max-width: 100px;"
+              />
+              <input
+                type="number"
+                id="inputMesMes"
+                min="1"
+                max="12"
+                class="form-control"
+                placeholder="5"
+                style="max-width: 100px;"
+              />
+              <button id="btnBuscarMes" class="btn btn-primary">Buscar Mes</button>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label for="inputDia" class="form-label">Buscar por Día (YYYY-MM-DD):</label>
+            <div class="input-group">
+              <input type="date" id="inputDia" class="form-control" />
+              <button id="btnBuscarDia" class="btn btn-primary">Buscar Día</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla de estadísticas por categoría -->
+        <table class="table table-striped mt-4">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Categoría</th>
+              <th>Cantidad de Ventas</th>
+              <th>Ganancias</th>
+              <th>% del Total</th>
+            </tr>
+          </thead>
+          <tbody id="tablaReportesBody">
+            <!-- Filas generadas dinámicamente -->
+          </tbody>
+        </table>
+      </main>
+    </div>
   </div>
-    </body>
+
+  <script src="js/reportes-script.js" defer></script>
+</body>
 </html>

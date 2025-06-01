@@ -1,134 +1,102 @@
-let ventas = [];
+// Mostrar totales año, mes y día actuales al cargar la página
+async function cargarTotalesActuales() {
+  try {
+    const [resAnio, resMes, resDia] = await Promise.all([
+      fetch('/api/reportes/anio-actual'),
+      fetch('/api/reportes/mes-actual'),
+      fetch('/api/reportes/hoy'),
+    ]);
+    if (!resAnio.ok || !resMes.ok || !resDia.ok) throw new Error('Error al obtener reportes actuales');
 
-async function calcularTotalesEnCurso() {
-    try {
-        const response = await fetch('api/ventas/obtenerVentas');
-        if (!response.ok) throw new Error('Error al obtener las ventas');
+    const reporteAnio = await resAnio.json();
+    const reporteMes = await resMes.json();
+    const reporteDia = await resDia.json();
 
-        ventas = await response.json();
-        console.log("Ventas recibidas:", ventas);
+    document.getElementById("ingresoVentasAnual").innerText = reporteAnio.totalGanancias.toFixed(2);
+    document.getElementById("ingresoVentasMes").innerText = reporteMes.totalGanancias.toFixed(2);
+    document.getElementById("ingresoVentasSemana").innerText = reporteDia.totalGanancias.toFixed(2);
 
-        const ahora = new Date();
-        const inicioAño = new Date(ahora.getFullYear(), 0, 1);
-        const inicioMes = new Date(ahora.getFullYear(), ahora.getMonth(), 1);
-
-        const dia = ahora.getDay();
-        const diferenciaLunes = dia === 0 ? -6 : 1 - dia;
-        const inicioSemana = new Date(ahora);
-        inicioSemana.setDate(ahora.getDate() + diferenciaLunes);
-        inicioSemana.setHours(0, 0, 0, 0);
-
-        let totalAño = 0;
-        let totalMes = 0;
-        let totalSemana = 0;
-
-        ventas.forEach(v => {
-            const fechaVenta = new Date(v.fecha);
-            const total = parseFloat(v.total);
-
-            if (fechaVenta >= inicioAño && fechaVenta <= ahora) {
-                totalAño += total;
-            }
-            if (fechaVenta >= inicioMes && fechaVenta <= ahora) {
-                totalMes += total;
-            }
-            if (fechaVenta >= inicioSemana && fechaVenta <= ahora) {
-                totalSemana += total;
-            }
-        });
-
-        /*
-        const campoSemana = document.getElementById("ingresoVentas");
-        const campoMes = document.getElementById("ingresoMes");
-        const campoAnio = document.getElementById("ingresoAnio");
-
-        if (campoSemana) campoSemana.value = totalSemana.toFixed(2);
-        if (campoMes) campoMes.value = totalMes.toFixed(2);
-        if (campoAnio) campoAnio.value = totalAño.toFixed(2);
-        */
-        document.getElementById("ingresoVentasAnual").innerText = totalSemana.toFixed(2);
-        document.getElementById("ingresoVentasMes").innerText = totalSemana.toFixed(2);
-        document.getElementById("ingresoVentasSemana").innerText = totalSemana.toFixed(2);
-
-        mostrarTablaVentas(ventas);
-    } catch (error) {
-        console.error("Error al calcular totales:", error);
-    }
+  } catch (error) {
+    console.error('Error al cargar totales actuales:', error);
+  }
 }
 
-document.addEventListener("DOMContentLoaded", calcularTotalesEnCurso);
-function cargarGrafico() {
-    fetch('api/ventas/obtenerVentas')
-        .then(response => response.json())
-        .then(ventas => {
-            const ahora = new Date();
+// Función para mostrar estadísticas en la tabla, usada para búsquedas específicas
+function mostrarTablaReportes(data) {
+  const tbody = document.getElementById('tablaReportesBody');
+  tbody.innerHTML = ''; // limpiar tabla
 
-            const dia = ahora.getDay();
-            const diferenciaLunes = dia === 0 ? -6 : 1 - dia;
-            const inicioSemana = new Date(ahora);
-            inicioSemana.setDate(ahora.getDate() + diferenciaLunes);
-            inicioSemana.setHours(0, 0, 0, 0);
+  const stats = data.estadisticasPorCategoria;
+  if (!stats) return;
 
-            const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-            const totalesPorDia = Array(7).fill(0);
+  for (const categoria in stats) {
+    if (Object.hasOwnProperty.call(stats, categoria)) {
+      const stat = stats[categoria];
+      const fila = document.createElement('tr');
 
-            ventas.forEach(v => {
-                const fechaVenta = new Date(v.fecha);
-                if (fechaVenta >= inicioSemana && fechaVenta <= ahora) {
-                    let diaSemana = fechaVenta.getDay();
-                    if (diaSemana === 0) diaSemana = 7;
-                    totalesPorDia[diaSemana - 1] += v.total;
-                }
-            });
-
-            // Crear gráfico
-            const ctx = document.getElementById('graficoVentas').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: diasSemana,
-                    datasets: [{
-                        label: 'Ventas Semanales ($)',
-                        data: totalesPorDia,
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        });
-}
-document.addEventListener("DOMContentLoaded", cargarGrafico);
-function mostrarTablaVentas() {
-    const tbody = document.getElementById('tablaVentasBody');
-    tbody.innerHTML = '';
-
-    ventas.forEach(venta => {
-        const fecha = new Date(venta.fecha).toLocaleString();
-        const cliente = venta.cliente.nombre;
-
-        venta.detalles.forEach(detalle => {
-            const fila = document.createElement('tr');
-
-            fila.innerHTML = `
-        <td>${fecha}</td>
-        <td>${cliente}</td>
-        <td>${detalle.nombreProducto}</td>
-        <td>$${detalle.precioUnitario.toFixed(2)}</td>
-        <td>${detalle.cantidad}</td>
-        <td>$${venta.total.toFixed(2)}</td>
+      fila.innerHTML = `
+        <td>${data.fechaInicio} a ${data.fechaFin}</td>
+        <td>${categoria}</td>
+        <td>${stat.cantidadVentas}</td>
+        <td>$${stat.ganancias.toFixed(2)}</td>
+        <td>${stat.porcentajeDelTotal.toFixed(2)}%</td>
       `;
 
-            tbody.appendChild(fila);
-        });
-    });
+      tbody.appendChild(fila);
+    }
+  }
 }
 
+// Búsquedas específicas que sólo actualizan la tabla, NO los cuadros de totales
+async function buscarPorAnio(anio) {
+  try {
+    const res = await fetch(`/api/reportes/por-anio?anio=${anio}`);
+    if (!res.ok) throw new Error('Error al obtener reporte por año');
+    const reporte = await res.json();
+    mostrarTablaReportes(reporte);
+  } catch (error) {
+    alert(error.message);
+  }
+}
 
+async function buscarPorMes(anio, mes) {
+  try {
+    const res = await fetch(`/api/reportes/por-mes?anio=${anio}&mes=${mes}`);
+    if (!res.ok) throw new Error('Error al obtener reporte por mes');
+    const reporte = await res.json();
+    mostrarTablaReportes(reporte);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+async function buscarPorDia(fecha) {
+  try {
+    const res = await fetch(`/api/reportes/por-dia?fecha=${fecha}`);
+    if (!res.ok) throw new Error('Error al obtener reporte por día');
+    const reporte = await res.json();
+    mostrarTablaReportes(reporte);
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+// Event listeners para los botones de búsqueda
+document.getElementById('btnBuscarAnio').addEventListener('click', () => {
+  const anio = document.getElementById('inputAnio').value;
+  if (anio) buscarPorAnio(anio);
+});
+
+document.getElementById('btnBuscarMes').addEventListener('click', () => {
+  const anio = document.getElementById('inputMesAnio').value;
+  const mes = document.getElementById('inputMesMes').value;
+  if (anio && mes) buscarPorMes(anio, mes);
+});
+
+document.getElementById('btnBuscarDia').addEventListener('click', () => {
+  const fecha = document.getElementById('inputDia').value;
+  if (fecha) buscarPorDia(fecha);
+});
+
+// Al cargar la página sólo cargar los totales actuales (sin tocar la tabla)
+document.addEventListener('DOMContentLoaded', cargarTotalesActuales);
