@@ -155,7 +155,8 @@ function crearVenta() {
             form.reset();
             document.querySelector('#tablaCarrito tbody').innerHTML = '';
 
-            // Si quieres devolver el JSON para otro uso:
+            crearFactura(ventaRegistrada.id);
+
             return ventaRegistrada;
 
         } catch (error) {
@@ -218,3 +219,31 @@ function obtenerClientes() {
 }
 
 document.addEventListener("DOMContentLoaded", obtenerClientes);
+
+async function crearFactura(idVenta) {
+    try {
+        const response = await fetch(`/api/ventas/factura-pdf/${idVenta}`, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error('Error al crear factura: ' + errorText);
+        }
+
+        // Obtener el PDF como blob
+        const pdfBlob = await response.blob();
+
+        // Crear un URL para el blob
+        const url = window.URL.createObjectURL(pdfBlob);
+
+        // Abrir el PDF en una nueva pestaña o ventana
+        window.open(url);
+
+    } catch (error) {
+        console.error('Error en crearFactura:', error);
+        alert('Error al crear factura');
+    }
+}
+
+

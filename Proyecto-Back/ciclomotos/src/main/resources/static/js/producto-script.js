@@ -62,7 +62,7 @@ async function obtenerProductos() {
 
 document.addEventListener('DOMContentLoaded', obtenerProductos);
 
-export function obtenerProductoPorId(id) {
+function obtenerProductoPorId(id) {
     fetch(`/api/productos/obtenerProducto/${id}`)
         .then(res => {
             if (!res.ok) throw new Error('producto no encontrado');
