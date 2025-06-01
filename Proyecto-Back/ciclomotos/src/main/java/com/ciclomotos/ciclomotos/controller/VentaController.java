@@ -84,6 +84,19 @@ public class VentaController {
         try {
             Venta ventaCreada = ventaService.crearVenta(request.getVenta(), request.getDetalles());
             VentaConDetallesResponse response = ventaService.obtenerVentaSimplePorId(ventaCreada.getId());
+            System.out.println("Venta recibida:");
+            System.out.println("Cliente ID: " + ventaCreada.getCliente().getId());
+            System.out.println("Subtotal: " + ventaCreada.getSubtotal());
+            System.out.println("IVA: " + ventaCreada.getIva());
+            System.out.println("Total: " + ventaCreada.getTotal());
+
+            if (ventaCreada.getDetalles() != null) {
+                for (DetalleVenta d : ventaCreada.getDetalles()) {
+                    System.out.println(d); // Usa el toString() de DetalleVenta
+                }
+            } else {
+                System.out.println("Detalles de venta es null");
+            }
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al crear venta: " + e.getMessage());

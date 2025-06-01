@@ -10,6 +10,7 @@ function registrarProducto() {
             precio: document.getElementById('precio').value,
             cantidad: document.getElementById('cantidad').value,
             stockMinimo: document.getElementById('stock-minimo').value,
+            proveedor: document.getElementById('preveedor').value,
         };
 
         fetch('/api/productos/crearProducto', {
@@ -48,7 +49,7 @@ async function obtenerProductos() {
         <td>${producto.cantidad}</td>
         <td>${producto.stockMinimo}</td>
         <td>${producto.categoria.nombre}</td>
-        <td>${producto}</td>
+        <td>${producto.proveedor.telefono}</td>
 
       `;
             tbody.appendChild(fila);
@@ -61,7 +62,7 @@ async function obtenerProductos() {
 
 document.addEventListener('DOMContentLoaded', obtenerProductos);
 
-function obtenerProductoPorId(id) {
+export function obtenerProductoPorId(id) {
     fetch(`/api/productos/obtenerProducto/${id}`)
         .then(res => {
             if (!res.ok) throw new Error('producto no encontrado');
