@@ -123,6 +123,44 @@
             <!-- Filas generadas dinámicamente -->
           </tbody>
         </table>
+
+        <hr />
+
+        <!-- Listado de ventas -->
+
+        <h5 class="mt-5">Listado de Ventas</h5>
+
+        <!-- Barra de búsqueda -->
+        <div class="input-group mb-3" style="max-width: 600px;">
+          <input
+            type="text"
+            id="inputBuscarVenta"
+            class="form-control"
+            placeholder="Buscar por #Venta, fecha o documento del cliente"
+            aria-label="Buscar ventas"
+          />
+          <button id="btnBuscarVenta" class="btn btn-outline-secondary">Buscar</button>
+          <button id="btnLimpiarBusqueda" class="btn btn-outline-secondary">Limpiar</button>
+        </div>
+
+        <!-- Contenedor scroll para la tabla -->
+        <div style="max-height: 300px; overflow-y: auto;">
+          <table class="table table-bordered table-hover">
+            <thead class="table-light">
+              <tr>
+                <th># Venta</th>
+                <th>Fecha</th>
+                <th>Cliente</th>
+                <th>Documento</th>
+                <th>Total</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaVentasBody">
+              <!-- Filas dinámicas -->
+            </tbody>
+          </table>
+        </div>
       </main>
     </div>
   </div>

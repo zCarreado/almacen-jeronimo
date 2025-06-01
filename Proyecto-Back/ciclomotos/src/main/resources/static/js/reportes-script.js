@@ -1,3 +1,5 @@
+let ventasGlobal = []; // Guardar todas las ventas para filtrar
+
 // Mostrar totales año, mes y día actuales al cargar la página
 async function cargarTotalesActuales() {
   try {
@@ -21,7 +23,7 @@ async function cargarTotalesActuales() {
   }
 }
 
-// Función para mostrar estadísticas en la tabla, usada para búsquedas específicas
+// Mostrar estadísticas en la tabla de reportes (busquedas específicas)
 function mostrarTablaReportes(data) {
   const tbody = document.getElementById('tablaReportesBody');
   tbody.innerHTML = ''; // limpiar tabla
@@ -47,7 +49,7 @@ function mostrarTablaReportes(data) {
   }
 }
 
-// Búsquedas específicas que sólo actualizan la tabla, NO los cuadros de totales
+// Búsquedas específicas (solo actualizan tabla, no totales)
 async function buscarPorAnio(anio) {
   try {
     const res = await fetch(`/api/reportes/por-anio?anio=${anio}`);
@@ -81,7 +83,105 @@ async function buscarPorDia(fecha) {
   }
 }
 
-// Event listeners para los botones de búsqueda
+// Cargar y mostrar lista de ventas con botón para factura
+async function cargarVentas() {
+  try {
+    const res = await fetch('/api/ventas/obtenerVentas');
+    if (!res.ok) throw new Error('Error al obtener lista de ventas');
+    ventasGlobal = await res.json();
+
+    mostrarVentas(ventasGlobal);
+
+  } catch (error) {
+    console.error('Error al cargar ventas:', error);
+  }
+}
+
+function mostrarVentas(ventas) {
+  const tbody = document.getElementById('tablaVentasBody');
+  tbody.innerHTML = '';
+
+  ventas.forEach(venta => {
+    const fila = document.createElement('tr');
+
+    const fechaFormateada = new Date(venta.fecha).toLocaleString('es-CO', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    fila.innerHTML = `
+      <td>${venta.id}</td>
+      <td>${fechaFormateada}</td>
+      <td>${venta.cliente ? venta.cliente.nombre : 'N/A'}</td>
+      <td>${venta.cliente ? venta.cliente.id : 'N/A'}</td>
+      <td>$${venta.total.toFixed(2)}</td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary btn-factura" data-id="${venta.id}">
+          Generar Factura
+        </button>
+      </td>
+    `;
+
+    tbody.appendChild(fila);
+  });
+
+  // Eventos de botón para descargar factura
+  document.querySelectorAll('.btn-factura').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idVenta = btn.getAttribute('data-id');
+      descargarFacturaPdf(idVenta);
+    });
+  });
+}
+
+function descargarFacturaPdf(idVenta) {
+  const url = `/api/ventas/factura-pdf/${idVenta}`;
+  window.open(url, '_blank');
+}
+
+// Filtrado con búsqueda
+function filtrarVentas(texto) {
+  const textoLower = texto.toLowerCase();
+
+  const filtradas = ventasGlobal.filter(venta => {
+    const idStr = String(venta.id);
+    const clienteNombre = (venta.cliente && venta.cliente.nombre) ? venta.cliente.nombre.toLowerCase() : '';
+    const clienteDocumento = (venta.cliente && venta.cliente.id) ? String(venta.cliente.id).toLowerCase() : '';
+    const fechaStr = new Date(venta.fecha).toLocaleDateString('es-CO');
+
+    return (
+      idStr.includes(textoLower) ||
+      clienteNombre.includes(textoLower) ||
+      clienteDocumento.includes(textoLower) ||
+      fechaStr.includes(textoLower)
+    );
+  });
+
+  mostrarVentas(filtradas);
+}
+
+// Event listeners para barra de búsqueda
+document.getElementById('btnBuscarVenta').addEventListener('click', () => {
+  const texto = document.getElementById('inputBuscarVenta').value.trim();
+  filtrarVentas(texto);
+});
+
+document.getElementById('inputBuscarVenta').addEventListener('keyup', (e) => {
+  if (e.key === 'Enter') {
+    const texto = e.target.value.trim();
+    filtrarVentas(texto);
+  }
+});
+
+document.getElementById('btnLimpiarBusqueda').addEventListener('click', () => {
+  document.getElementById('inputBuscarVenta').value = '';
+  mostrarVentas(ventasGlobal);
+});
+
+// Event listeners para botones de búsqueda de reportes
 document.getElementById('btnBuscarAnio').addEventListener('click', () => {
   const anio = document.getElementById('inputAnio').value;
   if (anio) buscarPorAnio(anio);
@@ -98,5 +198,8 @@ document.getElementById('btnBuscarDia').addEventListener('click', () => {
   if (fecha) buscarPorDia(fecha);
 });
 
-// Al cargar la página sólo cargar los totales actuales (sin tocar la tabla)
-document.addEventListener('DOMContentLoaded', cargarTotalesActuales);
+// Al cargar la página, cargar totales actuales y lista de ventas
+document.addEventListener('DOMContentLoaded', () => {
+  cargarTotalesActuales();
+  cargarVentas();
+});
