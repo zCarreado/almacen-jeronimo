@@ -1,3 +1,8 @@
 .enlace-aside:hover {
     background-color: black;
 }
+
+#formProducto .card-body {
+  max-height: 400px; /* ajusta si quieres más o menos altura */
+  overflow-y: auto;
+}

@@ -94,17 +94,17 @@ async function obtenerProductos() {
         productos.forEach(producto => {
             const fila = document.createElement("tr");
             fila.innerHTML = `
-        <td>${producto.id}</td>
-        <td>${producto.nombre}</td>
-        <td>${producto.precio}</td>
-        <td>${producto.cantidad}</td>
-        <td>${producto.stockMinimo}</td>
-        <td>${producto.categoria.nombre}</td>
-        <td>${producto.proveedor.telefono}</td>
-        <td>
-            <button class="btn btn-warning btn-sm me-2" onclick="editarProducto(${producto.id})">Editar</button>
-        </td>
-      `;
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>${producto.precio}</td>
+                <td>${producto.cantidad}</td>
+                <td>${producto.stockMinimo}</td>
+                <td>${producto.categoria.nombre}</td>
+                <td>${producto.proveedor.nombre}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm me-2" onclick="editarProducto(${producto.id})">Editar</button>
+                </td>
+            `;
             tbody.appendChild(fila);
         });
 
@@ -195,7 +195,7 @@ function mostrarProductosEnTabla(productos) {
     tbody.innerHTML = '';
     if (!productos || productos.length === 0) {
         const fila = document.createElement('tr');
-        fila.innerHTML = '<td colspan="7" class="text-center">No se encontraron productos</td>';
+        fila.innerHTML = '<td colspan="8" class="text-center">No se encontraron productos</td>';
         tbody.appendChild(fila);
         return;
     }
@@ -208,7 +208,7 @@ function mostrarProductosEnTabla(productos) {
             <td>${producto.cantidad}</td>
             <td>${producto.stockMinimo}</td>
             <td>${producto.categoria.nombre}</td>
-            <td>${producto.proveedor.telefono}</td>
+            <td>${producto.proveedor.nombre}</td>
             <td>
                 <button class="btn btn-warning btn-sm me-2" onclick="editarProducto(${producto.id})">Editar</button>
             </td>

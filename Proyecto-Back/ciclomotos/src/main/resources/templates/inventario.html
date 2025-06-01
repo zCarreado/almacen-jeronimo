@@ -9,24 +9,39 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <style>
+      /* Limitar altura de la lista de productos con scroll */
+      .card .card-body {
+        max-height: 400px;
+        overflow-y: auto;
+        scrollbar-width: thin; /* Firefox */
+      }
+      .card .card-body::-webkit-scrollbar {
+        width: 8px;
+      }
+      .card .card-body::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 4px;
+      }
+    </style>
     <script src="js/producto-script.js" defer></script>
+</head>
 
-  </head>
-  <body>
+<body>
 
-  <!-- Navbar superior -->
-  <header th:insert="~{fragments/navbar::navbar}"></header>
+<!-- Navbar superior -->
+<header th:insert="~{fragments/navbar::navbar}"></header>
 
-  <!-- Contenedor con aside + contenido -->
-  <div class="container-fluid m-0 p-0 g-0">
+<!-- Contenedor con aside + contenido -->
+<div class="container-fluid m-0 p-0 g-0">
 
-      <!-- alineador de asside y main-->
-      <div class="row g-0">
-          <!-- Aside izquierdo -->
-          <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
+    <!-- alineador de aside y main-->
+    <div class="row g-0">
+        <!-- Aside izquierdo -->
+        <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
 
-          <!-- Contenido principal -->
-          <main class="col-10 p-4">
+        <!-- Contenido principal -->
+        <main class="col-10 p-4">
             <h2 class="mb-4">Módulo de Inventario</h2>
 
             <form id="formBuscar" class="row g-3 align-items-end mb-4">
@@ -38,7 +53,8 @@
                     <button type="submit" class="btn btn-primary w-100 bg-dark border-0">Buscar Producto</button>
                 </div>
             </form>
-              <form id="formProducto" class="row g-3 mb-4">
+
+            <form id="formProducto" class="row g-3 mb-4">
                 <div class="col-md-4">
                     <label for="nombre" class="form-label">Nombre</label>
                     <input type="text" class="form-control" id="nombre" required>
@@ -67,6 +83,7 @@
                     <button type="submit" class="btn btn-success w-100">Guardar</button>
                 </div>
             </form>
+
             <div class="card">
                 <div class="card-header bg-primary text-white">Inventario</div>
                 <div class="card-body p-0">
@@ -87,9 +104,9 @@
                     </table>
                 </div>
             </div>
-              </form>
         </main>
-  </div>
-  </div>
-  </body>
+    </div>
+</div>
+
+</body>
 </html>

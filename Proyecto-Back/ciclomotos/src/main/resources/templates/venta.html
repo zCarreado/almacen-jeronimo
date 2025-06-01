@@ -9,93 +9,106 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
+    <style>
+      /* Limitar altura de lista productos con scroll */
+      #formProducto .card-body {
+        max-height: 400px;
+        overflow-y: auto;
+        scrollbar-width: thin; /* Firefox */
+      }
+      #formProducto .card-body::-webkit-scrollbar {
+        width: 8px;
+      }
+      #formProducto .card-body::-webkit-scrollbar-thumb {
+        background-color: rgba(0,0,0,0.2);
+        border-radius: 4px;
+      }
+    </style>
     <script type="module" src="js/venta-script.js" defer></script>
-
-
 </head>
-  <body>
-  
-    <!-- Navbar superior -->
-    <header th:insert="~{fragments/navbar::navbar}"></header>
 
-    <!-- Contenedor con aside + contenido -->
-    <div class="container-fluid m-0 p-0">
-        <div class="row g-0"> <!-- fila sin espacios -->
+<body>
 
-            <!-- Aside izquierdo -->
-            <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
+<header th:insert="~{fragments/navbar::navbar}"></header>
 
-            <!-- Contenido principal -->
-            <main class="col-9 p-4">
-                <h2 class="mb-4">Módulo de Ventas</h2>
+<div class="container-fluid m-0 p-0">
+    <div class="row g-0">
 
-                <form id="formBuscar" class="row g-3 align-items-end mb-4">
-                    <div class="col-md-4">
-                        <label for="buscarProducto" class="form-label">ID o Nombre del Producto</label>
-                        <input type="text" class="form-control" id="buscarProducto" placeholder="1100">
-                    </div>
-                    <div class="col-md-2">
-                        <label for="cantidad" class="form-label">Cantidad</label>
-                        <input type="number" class="form-control" id="cantidad" min="1" value="1">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100 bg-dark border-0">Agregar al carrito</button>
-                    </div>
-                    <div class="col-md-2">
-                        <select id="cliente" class="form-select">
-                            <option value="">Selecione un cliente</option>
-                        </select>
-                    </div>
-                </form>
-                <form id="formProducto">
-                    <div class="card">
-                        <div class="card-header bg-primary text-white">Inventario</div>
-                        <div class="card-body p-0">
-                            <table class="table table-hover mb-0">
-                                <thead class="table-light">
+        <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
+
+        <main class="col-9 p-4">
+            <h2 class="mb-4">Módulo de Ventas</h2>
+
+            <form id="formBuscar" class="row g-3 align-items-end mb-4">
+                <div class="col-md-6">
+                    <label for="buscarProducto" class="form-label">ID o Nombre del Producto</label>
+                    <input type="text" class="form-control" id="buscarProducto" placeholder="Ej. 1100 o Rines">
+                </div>
+                <div class="col-md-6 position-relative">
+                    <label for="clienteBuscar" class="form-label">ID o Nombre del Cliente</label>
+                    <input type="text" class="form-control" id="clienteBuscar" placeholder="Ej. 1 o Juan Pérez" autocomplete="off">
+                    <ul id="clienteResultados" class="list-group position-absolute w-100" style="z-index: 1000;"></ul>
+                    <div id="clienteResultado" class="form-text"></div>
+                </div>
+            </form>
+
+            <form id="formProducto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">Inventario</div>
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Precio</th>
                                     <th>Stock</th>
                                     <th>Cantidad</th>
-                                    <th>Categoria</th>
+                                    <th>Categoría</th>
                                     <th>Acción</th>
                                 </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
-                        </div>
+                            </thead>
+                            <tbody>
+                                <!-- Productos se cargan dinámicamente -->
+                            </tbody>
+                        </table>
                     </div>
-                </form>
-                <form id="formVenta">
-                <div class="card">
+                </div>
+            </form>
+
+            <form id="formVenta">
+                <div class="card mt-4">
                     <div class="card-header bg-primary text-white">Carrito de Venta</div>
                     <div class="card-body p-0">
                         <table class="table table-hover mb-0" id="tablaCarrito">
                             <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Cantidad</th>
-                                <th>Precio Unitario</th>
-                                <th>Subtotal</th>
-                                <th>IVA</th>
-                                <th>Total</th>
-                            </tr>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Subtotal</th>
+                                    <th>IVA</th>
+                                    <th>Total</th>
+                                    <th>Eliminar</th>
+                                </tr>
                             </thead>
                             <tbody id="carritoBody">
+                                <!-- Productos agregados al carrito -->
                             </tbody>
                         </table>
                     </div>
                 </div>
                 <div class="col-md-2 ms-auto mt-3">
-                    <button type="submit" class="btn btn-primary w-100 bg-dark border-0">Realizar Venta</button>
+                    <button type="submit" class="btn btn-primary w-100 bg-dark border-0" id="btnRealizarVenta" disabled>
+                        Realizar Venta
+                    </button>
                 </div>
-                </form>
-            </main>
-        </div>
+            </form>
+        </main>
+
     </div>
-  </body>
+</div>
+
+</body>
 </html>
