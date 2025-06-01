@@ -3,13 +3,43 @@ function registrarProducto() {
 
     form.addEventListener('submit', function (e) {
         e.preventDefault();
+        // Validación de campos numéricos mayores que 0
+        const precioInput = document.getElementById('precio');
+        const cantidadInput = document.getElementById('cantidad');
+        const stockMinimoInput = document.getElementById('stock-minimo');
+        const precio = parseFloat(precioInput.value);
+        const cantidad = parseInt(cantidadInput.value);
+        const stockMinimo = parseInt(stockMinimoInput.value);
+        let advertencia = '';
+        if (precio <= 0) {
+            advertencia += 'El precio debe ser mayor que 0.\n';
+            precioInput.classList.add('is-invalid');
+        } else {
+            precioInput.classList.remove('is-invalid');
+        }
+        if (cantidad <= 0) {
+            advertencia += 'La cantidad debe ser mayor que 0.\n';
+            cantidadInput.classList.add('is-invalid');
+        } else {
+            cantidadInput.classList.remove('is-invalid');
+        }
+        if (stockMinimo <= 0) {
+            advertencia += 'El stock mínimo debe ser mayor que 0.';
+            stockMinimoInput.classList.add('is-invalid');
+        } else {
+            stockMinimoInput.classList.remove('is-invalid');
+        }
+        if (advertencia) {
+            mostrarAdvertenciaValidacion(advertencia);
+            return;
+        }
         const idEditar = form.getAttribute('data-edit-id');
         const producto = {
             nombre: document.getElementById('nombre').value,
             categoria: { id: parseInt(document.getElementById('categoria').value) },
-            precio: document.getElementById('precio').value,
-            cantidad: document.getElementById('cantidad').value,
-            stockMinimo: document.getElementById('stock-minimo').value,
+            precio: precio,
+            cantidad: cantidad,
+            stockMinimo: stockMinimo,
             proveedor: { id: parseInt(document.getElementById('preveedor').value) },
         };
         let url = '/api/productos/crearProducto';
@@ -35,6 +65,22 @@ function registrarProducto() {
             })
             .catch(err => alert("Error: " + err.message));
     });
+}
+
+// Mostrar advertencia visual
+function mostrarAdvertenciaValidacion(mensaje) {
+    let alerta = document.getElementById('alerta-validacion');
+    if (!alerta) {
+        alerta = document.createElement('div');
+        alerta.id = 'alerta-validacion';
+        alerta.className = 'alert alert-danger mt-2';
+        const form = document.getElementById('formProducto');
+        form.parentNode.insertBefore(alerta, form);
+    }
+    alerta.textContent = mensaje;
+    setTimeout(() => {
+        if (alerta) alerta.remove();
+    }, 4000);
 }
 
 async function obtenerProductos() {
@@ -104,7 +150,72 @@ document.addEventListener('DOMContentLoaded', function () {
     cargarCategoriasYProveedores();
     obtenerProductos();
     registrarProducto();
+    registrarBusquedaProducto(); // Nueva función para búsqueda
 });
+
+function registrarBusquedaProducto() {
+    const formBuscar = document.getElementById('formBuscar');
+    const inputBuscar = document.getElementById('buscarProducto');
+    formBuscar.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const valor = inputBuscar.value.trim();
+        if (!valor) {
+            obtenerProductos();
+            return;
+        }
+        let productos = [];
+        try {
+            if (/^\d+$/.test(valor)) { // Si es número, buscar por ID
+                const res = await fetch(`/api/productos/obtenerProducto/${valor}`);
+                if (res.ok) {
+                    const prod = await res.json();
+                    productos = [prod];
+                } else {
+                    productos = [];
+                }
+            } else { // Si es texto, buscar por nombre
+                const res = await fetch(`/api/productos/buscarPorNombre/${encodeURIComponent(valor)}`);
+                if (res.ok) {
+                    productos = await res.json();
+                }
+            }
+            mostrarProductosEnTabla(productos);
+        } catch (err) {
+            alert('Error al buscar producto: ' + err.message);
+        }
+    });
+    // Opción para limpiar búsqueda al borrar el input
+    inputBuscar.addEventListener('input', function () {
+        if (!inputBuscar.value.trim()) obtenerProductos();
+    });
+}
+
+function mostrarProductosEnTabla(productos) {
+    const tbody = document.querySelector('table tbody');
+    tbody.innerHTML = '';
+    if (!productos || productos.length === 0) {
+        const fila = document.createElement('tr');
+        fila.innerHTML = '<td colspan="7" class="text-center">No se encontraron productos</td>';
+        tbody.appendChild(fila);
+        return;
+    }
+    productos.forEach(producto => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${producto.id}</td>
+            <td>${producto.nombre}</td>
+            <td>${producto.precio}</td>
+            <td>${producto.cantidad}</td>
+            <td>${producto.stockMinimo}</td>
+            <td>${producto.categoria.nombre}</td>
+            <td>${producto.proveedor.telefono}</td>
+            <td>
+                <button class="btn btn-warning btn-sm me-2" onclick="editarProducto(${producto.id})">Editar</button>
+            </td>
+        `;
+        tbody.appendChild(fila);
+    });
+}
 
 function editarProducto(id) {
     fetch(`/api/productos/obtenerProducto/${id}`)

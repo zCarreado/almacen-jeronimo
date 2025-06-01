@@ -11,6 +11,28 @@
     <link rel="stylesheet" th:href="@{/css/nav-styles.css}" href="../static/css/nav-styles.css">
     <link rel="stylesheet" th:href="@{/css/aside-styles.css}" href="/../static/css/aside-styles.css">
     <script src="/js/proveedor-script.js" defer></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn {
+            border-radius: 5px;
+        }
+        .table-hover tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
 
 </head>
 <body>
@@ -26,11 +48,11 @@
         <aside th:insert="~{fragments/admin-aside::admin-aside}" class="col-2 position-sticky"></aside>
         <main class="row col-10 p-4 g-5">
 
-            <div class="mb-3 d-flex flex-column g-0 col-md-6 p-4" >
-                <h2 class="mb-4">Gestión de Proveedores</h2>
+            <div class="mb-3 d-flex flex-column g-0 col-md-6 p-4">
+                <h2 class="mb-4 text-primary">Gestión de Proveedores</h2>
 
                 <!-- Formulario para registrar proveedor -->
-                <form id="formProveedor" class="row g-3 mb-4">
+                <form id="formProveedor" class="row g-3 mb-4 bg-white p-4 rounded shadow-sm">
                     <div class="col-md-6">
                         <label for="nombre" class="form-label">Nombre</label>
                         <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Proveedor S.A." required>
@@ -44,23 +66,35 @@
                         <input type="tel" name="telefono" class="form-control" id="telefono" placeholder="3001234567" required>
                     </div>
                     <div class="col-12">
-                        <button type="submit" class="btn btn-dark w-25 border-0">Registrar Proveedor</button>
+                        <button type="submit" class="btn btn-dark w-25 border-0" id="btnProveedor">Registrar Proveedor</button>
                     </div>
                 </form>
 
             </div>
-            <div class="mb-3 d-flex flex-column g-0 col-md-6 p-4" >
+            <div class="mb-3 d-flex flex-column g-0 col-md-6 p-4">
+                <!-- Barra de búsqueda encima de la lista de proveedores -->
+                <form id="formBuscarProveedor" class="row g-3 align-items-end mb-4 mt-3 bg-white p-3 rounded shadow-sm">
+                    <div class="col-md-6">
+                        <label for="buscarProveedor" class="form-label">Buscar por ID, Nombre o Correo</label>
+                        <input type="text" class="form-control" id="buscarProveedor" placeholder="Ej: 123, Proveedor S.A., proveedor@empresa.com">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                    </div>
+                </form>
+
                 <!-- Tabla de proveedores -->
                 <div class="card">
                     <div class="card-header bg-primary text-white">Lista de Proveedores</div>
                     <div class="card-body p-0">
-                        <table class="table table-hover mb-0">
+                        <table class="table table-hover mb-0 align-middle">
                             <thead class="table-light">
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
                                 <th>Correo</th>
                                 <th>Teléfono</th>
+                                <th>Acciones</th>
                             </tr>
                             </thead>
                             <tbody>
