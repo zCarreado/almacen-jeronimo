@@ -18,3 +18,8 @@
   .link-subrayado:hover::after {
     width: 100%;
   }
+
+  #formProducto .card-body {
+  max-height: 400px; /* ajusta si quieres más o menos altura */
+  overflow-y: auto;
+}
