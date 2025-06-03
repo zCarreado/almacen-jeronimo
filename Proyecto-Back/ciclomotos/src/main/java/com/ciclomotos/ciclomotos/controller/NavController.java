@@ -8,7 +8,7 @@ public class NavController {
 
     @GetMapping("/")
     public String mostrarInicio() {
-        return "/login";
+        return "login";
     }
     @GetMapping("/login")
     public String mostrarLogin() {
