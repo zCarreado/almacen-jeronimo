@@ -204,7 +204,7 @@ function crearVenta() {
             if (!response.ok) throw new Error('Error al registrar la venta');
 
             const ventaRegistrada = await response.json();
-            alert('Venta registrada correctamente:\n' + JSON.stringify(ventaRegistrada, null, 2));
+            alert('Venta registrada correctamente:\n');
 
             form.reset();
             document.querySelector('#tablaCarrito tbody').innerHTML = '';
@@ -214,6 +214,7 @@ function crearVenta() {
 
             validarFormularioVenta();
             crearFactura(ventaRegistrada.id);
+            await obtenerProductos();
 
         } catch (error) {
             console.error('Error al enviar la venta:', error);

@@ -105,7 +105,7 @@ function actualizarUsuario(id) {
             return res.json();
         })
         .then(data => {
-            alert("Usuario actualizado:\n" + JSON.stringify(data, null, 2));
+            alert("Usuario actualizado:\n");
         })
         .catch(err => alert(err.message));
 }

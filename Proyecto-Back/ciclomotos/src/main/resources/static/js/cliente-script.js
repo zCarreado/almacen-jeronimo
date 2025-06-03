@@ -60,7 +60,7 @@ function registrarCliente() {
                 return res.json();
             })
             .then(data => {
-                alert("Cliente " + (esEdicion ? "actualizado" : "registrado") + " correctamente:\n" + JSON.stringify(data, null, 2));
+                alert("Cliente " + (esEdicion ? "actualizado" : "registrado") + " correctamente:");
                 form.reset();
                 form.removeAttribute('data-edit-id');
                 document.getElementById('btnCliente').textContent = 'Registrar';
@@ -108,7 +108,7 @@ function obtenerClientePorId(id) {
             return res.json();
         })
         .then(data => {
-            alert("Cliente:\n" + JSON.stringify(data, null, 2));
+            alert("Cliente:\n");
         })
         .catch(err => alert(err.message));
 }
@@ -130,7 +130,7 @@ function actualizarCliente(id) {
             return res.json();
         })
         .then(data => {
-            alert("Cliente actualizado:\n" + JSON.stringify(data, null, 2));
+            alert("Cliente actualizado:\n");
         })
         .catch(err => alert(err.message));
 }

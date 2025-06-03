@@ -47,7 +47,7 @@ function registrarProveedor() {
                 return res.json();
             })
             .then(data => {
-                alert("Proveedor " + (esEdicion ? "actualizado" : "registrado") + " correctamente:\n" + JSON.stringify(data, null, 2));
+                alert("Proveedor " + (esEdicion ? "actualizado" : "registrado") + " correctamente:\n");
                 form.reset();
                 form.removeAttribute('data-edit-id');
                 document.getElementById('btnProveedor').textContent = 'Registrar Proveedor';
@@ -94,7 +94,7 @@ function obtenerProveedorPorId(id) {
             return res.json();
         })
         .then(data => {
-            alert("Proveedor:\n" + JSON.stringify(data, null, 2));
+            alert("Proveedor:\n");
         })
         .catch(err => alert(err.message));
 }
@@ -115,7 +115,7 @@ function actualizarProveedor(id) {
             if (!res.ok) throw new Error('Error al actualizar proveedor');
             return res.json();
         })
-        .then(data => alert('Proveedor actualizado:\n' + JSON.stringify(data, null, 2)))
+        .then(data => alert('Proveedor actualizado:\n'))
         .catch(err => alert(err.message));
 }
 

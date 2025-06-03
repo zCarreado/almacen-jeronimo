@@ -58,7 +58,7 @@ function registrarProducto() {
                 return res.json();
             })
             .then(data => {
-                alert("Producto " + (idEditar ? "actualizado" : "registrado") + " correctamente:\n" + JSON.stringify(data, null, 2));
+                alert("Producto " + (idEditar ? "actualizado" : "registrado") + " correctamente:\n");
                 form.reset();
                 form.removeAttribute('data-edit-id');
                 obtenerProductos();
