@@ -32,5 +32,10 @@ public class AsideController {
     }
 
     @GetMapping("/proveedores")
-    public String mostrarProveedores() {return  "proveedores";}
+    public String mostrarProveedores() {
+        return  "proveedores";
+    }
+
 }
+
+    

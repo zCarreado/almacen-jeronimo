@@ -20,4 +20,6 @@ public class NavController {
     public String mostrarRegistro() {
         return "cliente-registro";
     }
+
+    
 }
